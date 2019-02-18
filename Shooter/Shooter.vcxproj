@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\No-11\Documents\Visual Studio 2017\Projects\Shooter\packages\SDL.1.2.15.16\build\native\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\No-11\Documents\Visual Studio 2017\Projects\Shooter\packages\SDL.1.2.15.16\build\native\lib\Win32\v140_xp\Release\Application\NoStdioRedirect;C:\Users\No-11\Documents\Visual Studio 2017\Projects\Shooter\packages\SDL.1.2.15.16\build\native\lib\Win32\v140_xp\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)packages\SDL.1.2.15.16\build\native\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)packages\SDL.1.2.15.16\build\native\lib\Win32\v140_xp\Release\Application\NoStdioRedirect;$(SolutionDir)packages\SDL.1.2.15.16\build\native\lib\Win32\v140_xp\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -101,6 +101,10 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
+    <Link>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+      <AdditionalDependencies>SDL.lib;SDLmain.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -131,7 +135,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="app.cpp" />
