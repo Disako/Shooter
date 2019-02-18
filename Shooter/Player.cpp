@@ -18,24 +18,63 @@ void Player::Dispose()
 	SDL_FreeSurface(Image);
 }
 
-void Player::DoUpdate(Uint8 *keys, GameObject* gameObjects[], int gameObjectCount)
+void Player::DoUpdate(Uint8 *keys, GameObject* gameObjects[], int gameObjectCount, int screenWidth, int screenHeight)
 {
-	if (keys[SDLK_UP])
+	const int maxSpeed = 5;
+
+	int up = 0, left = 0;
+
+	if (keys[SDLK_UP]) up++;
+	if (Location.y > screenHeight - Location.h * 9 / 8) up++;
+	if (keys[SDLK_DOWN]) up--;
+	if (Location.y < Location.h / 8) up--;
+
+	if (keys[SDLK_LEFT]) left++;
+	if (Location.x > screenWidth - Location.w * 9 / 8) left++;
+	if (keys[SDLK_RIGHT]) left--;
+	if (Location.x < Location.w / 8) left--;
+
+	if (up > 0)
 	{
-		Location.y--;
+		Speed.y--;
 	}
-	if (keys[SDLK_DOWN])
+	else if (up < 0)
 	{
-		Location.y++;
+		Speed.y++;
 	}
-	if (keys[SDLK_LEFT])
+	else if (Speed.y < 0)
 	{
-		Location.x--;
+		Speed.y++;
 	}
-	if (keys[SDLK_RIGHT])
+	else if (Speed.y > 0)
 	{
-		Location.x++;
+		Speed.y--;
 	}
+
+	if (left > 0)
+	{
+		Speed.x--;
+	}
+	else if (left < 0)
+	{
+		Speed.x++;
+	}
+	else if (Speed.x < 0)
+	{
+		Speed.x++;
+	}
+	else if (Speed.x > 0)
+	{
+		Speed.x--;
+	}
+
+	if (Speed.x > maxSpeed) Speed.x = maxSpeed;
+	else if (Speed.x < -maxSpeed) Speed.x = -maxSpeed;
+	if (Speed.y > maxSpeed) Speed.y = maxSpeed;
+	else if (Speed.y < -maxSpeed) Speed.y = -maxSpeed;
+
+	Location.x += Speed.x;
+	Location.y += Speed.y;
 }
 
 void Player::Initialise()
@@ -45,6 +84,8 @@ void Player::Initialise()
 	Uint32 colorkey = SDL_MapRGB(Image->format, 0, 0xFF, 0);
 
 	SDL_SetColorKey(Image, SDL_SRCCOLORKEY, colorkey);
+
+	GameObject::Initialise();
 }
 
 SDL_Surface* Player::GetCurrentImage()

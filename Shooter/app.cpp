@@ -2,7 +2,7 @@
 #include "Player.h"
 #include "SDL_timer.h"
 
-void DoUpdate(Uint8 *keys, GameObject* gameObjects[], int objectCount);
+void DoUpdate(Uint8 *keys, GameObject* gameObjects[], int objectCount, int screenWidth, int screenHeight);
 void DrawScreen(SDL_Surface* screen, GameObject* gameObjects[], int objectCount);
 
 int main(int argc, char* args[])
@@ -11,9 +11,12 @@ int main(int argc, char* args[])
 	SDL_Event event;
 	Uint8 *keystates;
 
+	const int screenWidth = 640;
+	const int screenHeight = 480;
+
 	SDL_Init(SDL_INIT_EVERYTHING);
 	
-	screen = SDL_SetVideoMode(640, 480, 32, SDL_SWSURFACE);
+	screen = SDL_SetVideoMode(screenWidth, screenHeight, 32, SDL_SWSURFACE);
 
 	Player* ship = new Player();
 	
@@ -28,7 +31,7 @@ int main(int argc, char* args[])
 	{
 		SDL_PollEvent(&event);
 		keystates = SDL_GetKeyState(NULL);
-		DoUpdate(keystates, objects, 1);
+		DoUpdate(keystates, objects, 1, screenWidth, screenHeight);
 		DrawScreen(screen, objects, 1);
 
 		Uint32 currentTicks;
@@ -50,11 +53,11 @@ int main(int argc, char* args[])
 	return 0;
 }
 
-void DoUpdate(Uint8 *keys, GameObject* gameObjects[], int objectCount)
+void DoUpdate(Uint8 *keys, GameObject* gameObjects[], int objectCount, int screenWidth, int screenHeight)
 {
 	for (int i = 0; i < objectCount; i++)
 	{
-		gameObjects[i]->DoUpdate(keys, gameObjects, objectCount);
+		gameObjects[i]->DoUpdate(keys, gameObjects, objectCount, screenWidth, screenHeight);
 	}
 }
 
