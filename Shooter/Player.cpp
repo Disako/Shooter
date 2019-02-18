@@ -10,11 +10,6 @@ Player::Player()
 
 Player::~Player()
 {
-	Initialise();
-}
-
-void Player::Dispose()
-{
 	SDL_FreeSurface(Image);
 }
 

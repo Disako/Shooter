@@ -7,11 +7,14 @@
 
 GameState::GameState()
 {
-	GameObjects = {};
 }
 
 
 GameState::~GameState()
 {
-	GameObjects = {};
+	for (unsigned int i = 0; i < GameObjects.size(); i++)
+	{
+		delete GameObjects[i];
+	}
+	GameObjects.clear();
 }

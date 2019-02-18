@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "SDL_timer.h"
 
+void CreateShip(GameState* state);
 void DoUpdate(GameState* state);
 void DrawScreen(SDL_Surface* screen, GameState* state);
 
@@ -18,13 +19,8 @@ int main(int argc, char* args[])
 	SDL_Init(SDL_INIT_EVERYTHING);
 	
 	screen = SDL_SetVideoMode(state->ScreenWidth, state->ScreenHeight, 32, SDL_SWSURFACE);
-
-	Player* ship = new Player();
 	
-	ship->Location.x = 100;
-	ship->Location.y = 100;
-
-	state->GameObjects.push_back(ship);
+	CreateShip(state);
 
 	Uint32 lastRefreshTicks = SDL_GetTicks();
 
@@ -47,11 +43,21 @@ int main(int argc, char* args[])
 
 	} while (!(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE || event.type == SDL_QUIT));
 
-	ship->Dispose();
+	delete state;
 
 	SDL_Quit();
 
 	return 0;
+}
+
+void CreateShip(GameState* state)
+{
+	Player* ship = new Player();
+
+	ship->Location.x = 100;
+	ship->Location.y = 100;
+
+	state->GameObjects.push_back(ship);
 }
 
 void DoUpdate(GameState* state)

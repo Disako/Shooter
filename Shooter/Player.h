@@ -5,8 +5,7 @@ class Player :
 {
 public:
 	Player();
-	~Player();
-	void Dispose();
+	~Player() override;
 	void DoUpdate(GameState* state) override;
 protected:
 	SDL_Surface* GetCurrentImage() override;
