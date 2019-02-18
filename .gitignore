@@ -1,0 +1,9 @@
+*.dll
+*.suo
+*.pdb
+packages/
+*.vs/
+*.exe
+Debug/
+Release/
+*.vcxproj.user
