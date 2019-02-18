@@ -2,37 +2,38 @@
 #include "Player.h"
 #include "SDL_timer.h"
 
-void DoUpdate(Uint8 *keys, GameObject* gameObjects[], int objectCount, int screenWidth, int screenHeight);
-void DrawScreen(SDL_Surface* screen, GameObject* gameObjects[], int objectCount);
+void DoUpdate(GameState* state);
+void DrawScreen(SDL_Surface* screen, GameState* state);
 
 int main(int argc, char* args[])
 {
 	SDL_Surface* screen = NULL;
 	SDL_Event event;
-	Uint8 *keystates;
 
-	const int screenWidth = 640;
-	const int screenHeight = 480;
+	GameState* state = new GameState();
+
+	state->ScreenWidth = 640;
+	state->ScreenHeight = 480;
 
 	SDL_Init(SDL_INIT_EVERYTHING);
 	
-	screen = SDL_SetVideoMode(screenWidth, screenHeight, 32, SDL_SWSURFACE);
+	screen = SDL_SetVideoMode(state->ScreenWidth, state->ScreenHeight, 32, SDL_SWSURFACE);
 
 	Player* ship = new Player();
 	
 	ship->Location.x = 100;
 	ship->Location.y = 100;
 
-	GameObject* objects[1] = { ship };
+	state->GameObjects.push_back(ship);
 
 	Uint32 lastRefreshTicks = SDL_GetTicks();
 
 	do
 	{
 		SDL_PollEvent(&event);
-		keystates = SDL_GetKeyState(NULL);
-		DoUpdate(keystates, objects, 1, screenWidth, screenHeight);
-		DrawScreen(screen, objects, 1);
+		state->Keys = SDL_GetKeyState(NULL);
+		DoUpdate(state);
+		DrawScreen(screen, state);
 
 		Uint32 currentTicks;
 
@@ -53,20 +54,20 @@ int main(int argc, char* args[])
 	return 0;
 }
 
-void DoUpdate(Uint8 *keys, GameObject* gameObjects[], int objectCount, int screenWidth, int screenHeight)
+void DoUpdate(GameState* state)
 {
-	for (int i = 0; i < objectCount; i++)
+	for (unsigned int i = 0; i < state->GameObjects.size(); i++)
 	{
-		gameObjects[i]->DoUpdate(keys, gameObjects, objectCount, screenWidth, screenHeight);
+		state->GameObjects[i]->DoUpdate(state);
 	}
 }
 
-void DrawScreen(SDL_Surface* screen, GameObject* gameObjects[], int objectCount)
+void DrawScreen(SDL_Surface* screen, GameState* state)
 {
 	SDL_FillRect(SDL_GetVideoSurface(), NULL, SDL_MapRGB(SDL_GetVideoSurface()->format, 0, 0, 0));
 
-	for (int i = 0; i < objectCount; i++)
+	for (unsigned int i = 0; i < state->GameObjects.size(); i++)
 	{
-		gameObjects[i]->Draw(screen);
+		state->GameObjects[i]->Draw(screen);
 	}
 }

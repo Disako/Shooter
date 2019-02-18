@@ -7,7 +7,7 @@ public:
 	Player();
 	~Player();
 	void Dispose();
-	void DoUpdate(Uint8 *keys, GameObject* gameObjects[], int gameObjectCount, int screenWidth, int screenHeight) override;
+	void DoUpdate(GameState* state) override;
 protected:
 	SDL_Surface* GetCurrentImage() override;
 	void Initialise() override;

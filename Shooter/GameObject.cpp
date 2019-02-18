@@ -15,7 +15,7 @@ void GameObject::Draw(SDL_Surface * screen)
 	SDL_BlitSurface(GetCurrentImage(), NULL, screen, &Location);
 }
 
-void GameObject::DoUpdate(Uint8 *keys, GameObject* gameObjects[], int gameObjectCount, int screenWidth, int screenHeight)
+void GameObject::DoUpdate(GameState* state)
 {
 	// Override in derived class
 }

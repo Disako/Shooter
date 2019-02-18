@@ -18,20 +18,20 @@ void Player::Dispose()
 	SDL_FreeSurface(Image);
 }
 
-void Player::DoUpdate(Uint8 *keys, GameObject* gameObjects[], int gameObjectCount, int screenWidth, int screenHeight)
+void Player::DoUpdate(GameState* state)
 {
 	const int maxSpeed = 5;
 
 	int up = 0, left = 0;
 
-	if (keys[SDLK_UP] || keys[SDLK_w]) up++;
-	if (Location.y > screenHeight - Location.h * 9 / 8) up++;
-	if (keys[SDLK_DOWN] || keys[SDLK_s]) up--;
+	if (state->Keys[SDLK_UP] || state->Keys[SDLK_w]) up++;
+	if (Location.y > state->ScreenHeight - Location.h * 9 / 8) up++;
+	if (state->Keys[SDLK_DOWN] || state->Keys[SDLK_s]) up--;
 	if (Location.y < Location.h / 8) up--;
 
-	if (keys[SDLK_LEFT] || keys[SDLK_a]) left++;
-	if (Location.x > screenWidth - Location.w * 9 / 8) left++;
-	if (keys[SDLK_RIGHT] || keys[SDLK_d]) left--;
+	if (state->Keys[SDLK_LEFT] || state->Keys[SDLK_a]) left++;
+	if (Location.x > state->ScreenWidth - Location.w * 9 / 8) left++;
+	if (state->Keys[SDLK_RIGHT] || state->Keys[SDLK_d]) left--;
 	if (Location.x < Location.w / 8) left--;
 
 	if (up > 0)

@@ -1,4 +1,5 @@
 #include "SDL.h"
+#include "GameState.h"
 
 #pragma once
 class GameObject
@@ -10,7 +11,7 @@ public:
 	SDL_Rect Location;
 
 	void Draw(SDL_Surface* screen);
-	virtual void DoUpdate(Uint8 *keys, GameObject* gameObjects[], int gameObjectCount, int screenWidth, int screenHeight);
+	virtual void DoUpdate(GameState* state);
 
 protected:
 	virtual SDL_Surface* GetCurrentImage();
