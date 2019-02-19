@@ -13,7 +13,7 @@ GameObject::~GameObject()
 
 void GameObject::Draw(SDL_Surface * screen)
 {
-	SDL_BlitSurface(GetCurrentImage(), NULL, screen, &Location);
+	SDL_BlitSurface(GetCurrentImage(), NULL, screen, new SDL_Rect(Location));
 }
 
 void GameObject::Destroy(GameState* state)

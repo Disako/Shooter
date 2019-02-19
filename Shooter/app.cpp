@@ -42,9 +42,8 @@ int main(int argc, char* args[])
 		Uint32 currentTicks;
 
 		currentTicks = SDL_GetTicks();
-		Uint32 delay = lastRefreshTicks + 17 - currentTicks;
-		if (delay > 0)
-			SDL_Delay(delay);
+		if(lastRefreshTicks + 17 > currentTicks)
+			SDL_Delay(lastRefreshTicks + 17 - currentTicks);
 
 		SDL_Flip(screen);
 
