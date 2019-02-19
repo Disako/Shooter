@@ -1,16 +1,16 @@
 #include "Player.h"
 #include "SDL.h"
+#include "Graphics.h"
 
 
-Player::Player()
+Player::Player(Graphics* graphics)
 {
-	Initialise();
+	Initialise(graphics);
 }
 
 
 Player::~Player()
 {
-	SDL_FreeSurface(Image);
 }
 
 void Player::DoUpdate(GameState* state)
@@ -72,15 +72,11 @@ void Player::DoUpdate(GameState* state)
 	Location.y += Speed.y;
 }
 
-void Player::Initialise()
+void Player::Initialise(Graphics* graphics)
 {
-	Image = SDL_DisplayFormat(SDL_LoadBMP("images\\Ship.bmp"));
+	Image = graphics->Player;
 
-	Uint32 colorkey = SDL_MapRGB(Image->format, 0, 0xFF, 0);
-
-	SDL_SetColorKey(Image, SDL_SRCCOLORKEY, colorkey);
-
-	GameObject::Initialise();
+	GameObject::Initialise(graphics);
 }
 
 SDL_Surface* Player::GetCurrentImage()

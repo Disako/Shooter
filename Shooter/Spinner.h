@@ -1,17 +1,19 @@
 #pragma once
-#include "GameObject.h"
-class Player :
-	public GameObject
+#include "Enemy.h"
+#include "Graphics.h"
+
+class Spinner :
+	public Enemy
 {
 public:
-	Player(Graphics* graphics);
-	~Player() override;
+	Spinner(Graphics* graphics, bool goingRight);
+	~Spinner() override;
 	void DoUpdate(GameState* state) override;
 protected:
 	SDL_Surface* GetCurrentImage() override;
 	void Initialise(Graphics* graphics) override;
 private:
 	SDL_Surface* Image;
-	SDL_Rect Speed;
+	bool GoingRight;
 };
 

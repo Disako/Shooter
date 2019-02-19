@@ -1,10 +1,13 @@
 #include "SDL.h"
 #include "Player.h"
 #include "SDL_timer.h"
+#include "Graphics.h"
+#include "Spinner.h"
 
-void CreateShip(GameState* state);
+void CreateShip(GameState* state, Graphics* graphics);
 void DoUpdate(GameState* state);
 void DrawScreen(SDL_Surface* screen, GameState* state);
+void AddEnemy(GameState* state, Graphics* graphics);
 
 int main(int argc, char* args[])
 {
@@ -19,13 +22,18 @@ int main(int argc, char* args[])
 	SDL_Init(SDL_INIT_EVERYTHING);
 	
 	screen = SDL_SetVideoMode(state->ScreenWidth, state->ScreenHeight, 32, SDL_SWSURFACE);
+
+	Graphics* graphics = new Graphics();
 	
-	CreateShip(state);
+	CreateShip(state, graphics);
 
 	Uint32 lastRefreshTicks = SDL_GetTicks();
 
+	AddEnemy(state, graphics);
+
 	do
 	{
+
 		SDL_PollEvent(&event);
 		state->Keys = SDL_GetKeyState(NULL);
 		DoUpdate(state);
@@ -44,15 +52,26 @@ int main(int argc, char* args[])
 	} while (!(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE || event.type == SDL_QUIT));
 
 	delete state;
+	delete graphics;
 
 	SDL_Quit();
 
 	return 0;
 }
 
-void CreateShip(GameState* state)
+void AddEnemy(GameState* state, Graphics* graphics)
 {
-	Player* ship = new Player();
+	Spinner* enemy = new Spinner(graphics, true);
+
+	enemy->Location.x = state->ScreenWidth / 2;
+	enemy->Location.y = -enemy->Location.h;
+
+	state->GameObjects.push_back(enemy);
+}
+
+void CreateShip(GameState* state, Graphics* graphics)
+{
+	Player* ship = new Player(graphics);
 
 	ship->Location.x = 100;
 	ship->Location.y = 100;
