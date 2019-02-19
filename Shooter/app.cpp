@@ -41,13 +41,14 @@ int main(int argc, char* args[])
 
 		Uint32 currentTicks;
 
-		do {
-			currentTicks = SDL_GetTicks();
-		} while (currentTicks < lastRefreshTicks + 17);
+		currentTicks = SDL_GetTicks();
+		Uint32 delay = lastRefreshTicks + 17 - currentTicks;
+		if (delay > 0)
+			SDL_Delay(delay);
 
 		SDL_Flip(screen);
 
-		lastRefreshTicks = currentTicks;
+		lastRefreshTicks = SDL_GetTicks();
 
 	} while (!(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE || event.type == SDL_QUIT));
 
