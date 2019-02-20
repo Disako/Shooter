@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "SDL.h"
 #include "Graphics.h"
+#include "Enemy.h"
 
 
 Player::Player(Graphics* graphics)
@@ -70,6 +71,41 @@ void Player::DoUpdate(GameState* state)
 
 	Location.x += Speed.x;
 	Location.y += Speed.y;
+
+	for (int i = 0; i < state->GameObjects.size(); i++)
+	{
+		Enemy* enemy = dynamic_cast<Enemy*>(state->GameObjects[i]);
+		if (enemy)
+		{
+			if (CheckCollision(enemy))
+			{
+				enemy->Destroy(state);
+				Destroy(state);
+				return;
+			}
+		}
+	}
+}
+
+std::vector<SDL_Rect> Player::GetCollison()
+{
+	SDL_Rect r1, r2, r3;
+	r1.x = 29;
+	r1.y = 20;
+	r1.w = 22;
+	r1.h = 37;
+
+	r2.x = 14;
+	r2.y = 46;
+	r2.w = 15;
+	r2.h = 22;
+
+	r3.x = 51;
+	r3.y = 46;
+	r3.w = 15;
+	r3.h = 22;
+
+	return { r1, r2, r3 };
 }
 
 void Player::Initialise(Graphics* graphics)
