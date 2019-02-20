@@ -13,7 +13,7 @@ PlayerShot::~PlayerShot()
 
 void PlayerShot::DoUpdate(GameState * state)
 {
-	for (int i = 0; i < state->GameObjects.size(); i++)
+	for (unsigned int i = 0; i < state->GameObjects.size(); i++)
 	{
 		Enemy* enemy = dynamic_cast<Enemy*>(state->GameObjects[i]);
 		if (enemy)

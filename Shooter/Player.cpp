@@ -85,7 +85,7 @@ void Player::DoUpdate(GameState* state)
 	Location.x += Speed.x;
 	Location.y += Speed.y;
 
-	for (int i = 0; i < state->GameObjects.size(); i++)
+	for (unsigned int i = 0; i < state->GameObjects.size(); i++)
 	{
 		Enemy* enemy = dynamic_cast<Enemy*>(state->GameObjects[i]);
 		if (enemy)
