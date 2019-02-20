@@ -11,6 +11,7 @@ public:
 	virtual ~GameObject();
 
 	SDL_Rect Location;
+	bool Destroyed;
 
 	void Draw(SDL_Surface* screen);
 	virtual void DoUpdate(GameState* state);

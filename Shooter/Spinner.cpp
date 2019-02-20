@@ -27,7 +27,7 @@ void Spinner::DoUpdate(GameState * state)
 
 	if (IsOutOfBounds(state))
 	{
-		Destroy(state);
+		Destroyed = true;
 	}
 }
 

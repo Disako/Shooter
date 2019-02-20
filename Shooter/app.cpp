@@ -3,6 +3,7 @@
 #include "SDL_timer.h"
 #include "Graphics.h"
 #include "Spinner.h"
+#include <vector>
 
 void CreateShip(GameState* state, Graphics* graphics);
 void DoUpdate(GameState* state);
@@ -85,6 +86,22 @@ void DoUpdate(GameState* state)
 	{
 		state->GameObjects[i]->DoUpdate(state);
 	}
+
+	std::vector<GameObject*> objectsToDelete = std::vector<GameObject*>();
+
+	for (unsigned int i = 0; i < state->GameObjects.size(); i++)
+	{
+		if (state->GameObjects[i]->Destroyed)
+		{
+			objectsToDelete.push_back(state->GameObjects[i]);
+		}
+	}
+
+	for (unsigned int i = 0; i < objectsToDelete.size(); i++)
+	{
+		state->GameObjects.erase(std::find(state->GameObjects.begin(), state->GameObjects.end(), objectsToDelete[i]), state->GameObjects.end());
+		delete objectsToDelete[i];
+	}	
 }
 
 void DrawScreen(SDL_Surface* screen, GameState* state)

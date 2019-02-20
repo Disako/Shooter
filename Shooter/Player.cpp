@@ -79,9 +79,8 @@ void Player::DoUpdate(GameState* state)
 		{
 			if (CheckCollision(enemy))
 			{
-				enemy->Destroy(state);
-				Destroy(state);
-				return;
+				enemy->Destroyed = true;
+				Destroyed = true;
 			}
 		}
 	}
