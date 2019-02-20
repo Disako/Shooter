@@ -16,7 +16,6 @@ public:
 	void Draw(SDL_Surface* screen);
 	virtual void DoUpdate(GameState* state);
 	bool IsOutOfBounds(GameState* state);
-	void Destroy(GameState* state);
 	virtual std::vector<SDL_Rect> GetCollison();
 	bool CheckCollision(GameObject* otherObject);
 
