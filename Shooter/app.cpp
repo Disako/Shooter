@@ -87,21 +87,21 @@ void DoUpdate(GameState* state)
 		state->GameObjects[i]->DoUpdate(state);
 	}
 
-	std::vector<GameObject*> objectsToDelete = std::vector<GameObject*>();
+	std::vector<int> indexesToDelete = std::vector<int>();
 
 	for (unsigned int i = 0; i < state->GameObjects.size(); i++)
 	{
 		if (state->GameObjects[i]->Destroyed)
 		{
-			objectsToDelete.push_back(state->GameObjects[i]);
+			indexesToDelete.push_back(i);
 		}
 	}
 
-	for (unsigned int i = 0; i < objectsToDelete.size(); i++)
+	for (int i = indexesToDelete.size() - 1; i >= 0; i--)
 	{
-		state->GameObjects.erase(std::find(state->GameObjects.begin(), state->GameObjects.end(), objectsToDelete[i]), state->GameObjects.end());
-		delete objectsToDelete[i];
-	}	
+		delete state->GameObjects[indexesToDelete[i]];
+		state->GameObjects.erase(state->GameObjects.begin() + indexesToDelete[i]);
+	}
 }
 
 void DrawScreen(SDL_Surface* screen, GameState* state)

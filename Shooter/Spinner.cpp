@@ -55,6 +55,7 @@ std::vector<SDL_Rect> Spinner::GetCollison()
 void Spinner::Initialise(Graphics* graphics)
 {
 	Image = graphics->Spinner;
+	HP = 1;
 
 	GameObject::Initialise(graphics);
 }

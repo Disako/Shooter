@@ -2,7 +2,7 @@
 #include "SDL.h"
 #include "Graphics.h"
 #include "Enemy.h"
-
+#include "BasicBullet.h"
 
 Player::Player(Graphics* graphics)
 {
@@ -29,6 +29,19 @@ void Player::DoUpdate(GameState* state)
 	if (Location.x > state->ScreenWidth - Location.w * 9 / 8) left++;
 	if (state->Keys[SDLK_RIGHT] || state->Keys[SDLK_d]) left--;
 	if (Location.x < Location.w / 8) left--;
+
+	if ((state->Keys[SDLK_SPACE] || state->Keys[SDLK_RETURN]) && Reload == 0)
+	{
+		BasicBullet* bullet = new BasicBullet(GraphicsStore);
+		bullet->Location.x = Location.x + Location.w / 2 - bullet->Location.w / 2;
+		bullet->Location.y = Location.y;
+		state->GameObjects.push_back(bullet);
+		Reload = 10;
+	}
+	else if (Reload > 0)
+	{
+		Reload--;
+	}
 
 	if (up > 0)
 	{
@@ -79,7 +92,7 @@ void Player::DoUpdate(GameState* state)
 		{
 			if (CheckCollision(enemy))
 			{
-				enemy->Destroyed = true;
+				enemy->Damage(10);
 				Destroyed = true;
 			}
 		}
@@ -109,12 +122,12 @@ std::vector<SDL_Rect> Player::GetCollison()
 
 void Player::Initialise(Graphics* graphics)
 {
-	Image = graphics->Player;
+	GraphicsStore = graphics;
 
 	GameObject::Initialise(graphics);
 }
 
 SDL_Surface* Player::GetCurrentImage()
 {
-	return Image;
+	return GraphicsStore->Player;
 }

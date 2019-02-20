@@ -6,5 +6,7 @@ class Enemy :
 public:
 	Enemy();
 	~Enemy();
+	int HP;
+	void Damage(unsigned int damage);
 };
 

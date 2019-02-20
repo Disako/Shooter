@@ -12,7 +12,8 @@ protected:
 	SDL_Surface* GetCurrentImage() override;
 	void Initialise(Graphics* graphics) override;
 private:
-	SDL_Surface* Image;
 	SDL_Rect Speed;
+	int Reload;
+	Graphics* GraphicsStore;
 };
 
