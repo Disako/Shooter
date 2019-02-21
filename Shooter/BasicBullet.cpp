@@ -14,7 +14,9 @@ BasicBullet::~BasicBullet()
 
 void BasicBullet::Initialise(Graphics* graphics)
 {
-	Image = graphics->BasicBullet;
+	Image = graphics->LoadImage("images\\BasicBullet.bmp");
+
+	Collision = GetCollison();
 
 	GameObject::Initialise(graphics);
 }

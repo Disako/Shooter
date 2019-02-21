@@ -124,10 +124,12 @@ void Player::Initialise(Graphics* graphics)
 {
 	GraphicsStore = graphics;
 
+	Collision = GetCollison();
+
 	GameObject::Initialise(graphics);
 }
 
 SDL_Surface* Player::GetCurrentImage()
 {
-	return GraphicsStore->Player;
+	return GraphicsStore->LoadImage("Images\\Ship.bmp");
 }

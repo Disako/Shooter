@@ -1,7 +1,7 @@
 #pragma once
 #include "SDL.h"
 #include <string>
-#include <vector>
+#include <map>
 
 class Graphics
 {
@@ -9,12 +9,9 @@ public:
 	Graphics();
 	~Graphics();
 
-	SDL_Surface* Player;
-	SDL_Surface* Spinner;
-	SDL_Surface* BasicBullet;
+	SDL_Surface* LoadImage(std::string filename);
 
 private:
-	SDL_Surface* LoadImage(std::string filename);
-	std::vector<SDL_Surface*> AddedImages;
+	std::map<std::string, SDL_Surface*> AddedImages;
 };
 

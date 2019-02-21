@@ -2,7 +2,7 @@
 #include "Player.h"
 #include "SDL_timer.h"
 #include "Graphics.h"
-#include "Spinner.h"
+#include "Enemy.h"
 #include <vector>
 
 void CreateShip(GameState* state, Graphics* graphics);
@@ -62,7 +62,7 @@ int main(int argc, char* args[])
 
 void AddEnemy(GameState* state, Graphics* graphics)
 {
-	Spinner* enemy = new Spinner(graphics, true);
+	Enemy* enemy = new Enemy(graphics, "spinner", "right");
 
 	enemy->Location.x = state->ScreenWidth / 2;
 	enemy->Location.y = -enemy->Location.h;

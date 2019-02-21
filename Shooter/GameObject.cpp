@@ -1,3 +1,9 @@
+extern "C" {
+# include "lua.h"
+# include "lauxlib.h"
+# include "lualib.h"
+}
+#include "..\LuaBridge\Source\LuaBridge\LuaBridge.h"
 #include "GameObject.h"
 #include "SDL.h"
 #include "Graphics.h"
@@ -16,6 +22,27 @@ void GameObject::Draw(SDL_Surface * screen)
 	SDL_BlitSurface(GetCurrentImage(), NULL, screen, new SDL_Rect(Location));
 }
 
+void GameObject::SetCollision(luabridge::LuaRef ref)
+{
+	Collision.clear();
+	for (int i = 1; i <= ref.length(); i++)
+	{
+		SDL_Rect rect;
+		auto crect = ref[i];
+		rect.x = crect[1];
+		rect.y = crect[2];
+		rect.w = crect[3];
+		rect.h = crect[4];
+		Collision.push_back(rect);
+	}
+}
+
+void GameObject::SetPosition(int x, int y)
+{
+	Location.x = x;
+	Location.y = y;
+}
+
 std::vector<SDL_Rect> GameObject::GetCollison()
 {
 	return std::vector<SDL_Rect>();
@@ -23,8 +50,8 @@ std::vector<SDL_Rect> GameObject::GetCollison()
 
 bool GameObject::CheckCollision(GameObject * otherObject)
 {
-	std::vector<SDL_Rect> collision1 = this->GetCollison();
-	std::vector<SDL_Rect> collision2 = otherObject->GetCollison();
+	std::vector<SDL_Rect> collision1 = this->Collision;
+	std::vector<SDL_Rect> collision2 = otherObject->Collision;
 	for (unsigned int i = 0; i < collision1.size(); i++)
 	{
 		int left1 = Location.x + collision1[i].x;
