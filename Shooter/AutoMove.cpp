@@ -15,16 +15,19 @@ AutoMove::~AutoMove()
 
 void AutoMove::DoUpdate(GameState * state)
 {
-	Position position;
-	position.X = Location.x;
-	position.Y = Location.y;
-	position.State = State;
+	if (Movement)
+	{
+		Position position;
+		position.X = Location.x;
+		position.Y = Location.y;
+		position.State = State;
 
-	position = Movement(position);
+		position = Movement(position);
 
-	Location.x = position.X;
-	Location.y = position.Y;
-	State = position.State;
+		Location.x = position.X;
+		Location.y = position.Y;
+		State = position.State;
+	}
 
 	if (IsOutOfBounds(state))
 	{
@@ -34,5 +37,5 @@ void AutoMove::DoUpdate(GameState * state)
 
 void AutoMove::Initialise(Graphics * graphics, lua_State* L, luabridge::LuaRef ref)
 {
-	Movement = ref["movement"];
+	Movement = GetFunction(ref, "movement");
 }

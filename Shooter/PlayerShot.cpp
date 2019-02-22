@@ -32,5 +32,5 @@ void PlayerShot::DoUpdate(GameState * state)
 
 void PlayerShot::Initialise(Graphics * graphics, lua_State* L, luabridge::LuaRef ref)
 {
-	Damage = ref["damage"];
+	Damage = GetInt(ref, "damage", 1);
 }

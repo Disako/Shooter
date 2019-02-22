@@ -9,6 +9,8 @@ extern "C" {
 #include "Graphics.h"
 #include "Position.h"
 #include <Tuple>
+#include <stdexcept>
+#include <sstream>
 
 GameObject::GameObject(Graphics* graphics, std::tuple<lua_State*, luabridge::LuaRef> luaRef)
 {
@@ -28,14 +30,32 @@ void GameObject::Draw(SDL_Surface * screen)
 void GameObject::SetCollision(luabridge::LuaRef ref)
 {
 	Collision.clear();
+
+	if (ref.isNil())
+	{
+		return;
+	}
+	if (!ref.isTable())
+	{
+		std::runtime_error("Invalid value for collision, expects table");
+	}
+
 	for (int i = 1; i <= ref.length(); i++)
 	{
 		SDL_Rect rect;
 		auto crect = ref[i];
-		rect.x = crect[1];
-		rect.y = crect[2];
-		rect.w = crect[3];
-		rect.h = crect[4];
+		if (!crect.isTable())
+		{
+			std::runtime_error("Invalid value for collision, expects table of lists");
+		}
+		else if (!crect.length() == 4)
+		{
+			std::runtime_error("Invalid value for collision, expects table of lists of length 4");
+		}
+		rect.x = GetInt(crect, 1, "collision");
+		rect.y = GetInt(crect, 2, "collision");
+		rect.w = GetInt(crect, 3, "collision");
+		rect.h = GetInt(crect, 4, "collision");
 		Collision.push_back(rect);
 	}
 }
@@ -46,8 +66,9 @@ std::tuple<lua_State*, luabridge::LuaRef> GameObject::SetupLua(std::string file,
 
 	if (luaL_dofile(L, file.data()))
 	{
-		auto error = lua_tostring(L, -1);
-		fprintf(stderr, "luaL_dofile failed: %s\n", error);
+		std::stringstream error;
+		error << "luaL_dofile failed: " << lua_tostring(L, -1);
+		throw std::runtime_error(error.str());
 	}
 	luaL_openlibs(L);
 	lua_pcall(L, 0, 0, 0);
@@ -116,10 +137,109 @@ void GameObject::Initialise(Graphics* graphics, lua_State* L, luabridge::LuaRef 
 {
 	SetCollision(ref["collision"]);
 
-	Image = graphics->LoadImage(ref["image"]);
+	Image = graphics->LoadImage(GetString(ref, "image", "none"));
 
 	SDL_Rect rect = GetCurrentImage()->clip_rect;
 	Location.w = rect.w;
 	Location.h = rect.h;
+}
+
+int GameObject::GetInt(luabridge::LuaRef ref, std::string key, int defaultValue)
+{
+	if (ref[key].isNil())
+	{
+		return defaultValue;
+	}
+	else if (ref[key].isNumber())
+	{
+		return ref[key];
+	}
+	else
+	{
+		std::stringstream error;
+		error << "Invalid value for " << key << ", expects integer";
+		throw std::runtime_error(error.str());
+	}
+}
+
+int GameObject::GetInt(luabridge::LuaRef ref, std::string key, int index, int defaultValue)
+{
+	if (ref[key].isNil())
+	{
+		return defaultValue;
+	}
+	else if (ref[key].isTable())
+	{
+		return GetInt(ref[key], index, key);
+	}
+	else
+	{
+		std::stringstream error;
+		error << "Invalid value for " << key << ", expects list";
+		throw std::runtime_error(error.str());
+	}
+}
+
+int GameObject::GetInt(luabridge::LuaRef ref, int index, std::string parent)
+{
+	if (index < 1)
+	{
+		throw std::runtime_error("Index must be greater than zero");
+	}
+	else if (ref.length() < index)
+	{
+		std::stringstream error;
+		error << "Invalid value for " << parent << ", expects list of at least length " << index;
+		throw std::runtime_error(error.str());
+	}
+	else
+	{
+		if (ref[index].isNumber())
+		{
+			return ref[index];
+		}
+		else
+		{
+			std::stringstream error;
+			error << "Invalid value for " << parent << ", expects list of integers";
+			throw std::runtime_error(error.str());
+		}
+	}
+}
+
+std::string GameObject::GetString(luabridge::LuaRef ref, std::string key, std::string defaultValue)
+{
+	if (ref[key].isNil())
+	{
+		return defaultValue;
+	}
+	else if (ref[key].isString())
+	{
+		return ref[key];
+	}
+	else
+	{
+		std::stringstream error;
+		error << "Invalid value for " << key << ", expects string";
+		throw std::runtime_error(error.str());
+	}
+}
+
+luabridge::LuaRef GameObject::GetFunction(luabridge::LuaRef ref, std::string key)
+{
+	if (ref[key].isNil())
+	{
+		return nullptr;
+	}
+	else if (ref[key].isFunction())
+	{
+		return ref[key];
+	}
+	else
+	{
+		std::stringstream error;
+		error << "Invalid value for " << key << ", expects function";
+		throw std::runtime_error(error.str());
+	}
 }
 

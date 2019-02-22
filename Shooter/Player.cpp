@@ -5,6 +5,7 @@
 #include <string>
 #include <tuple>
 #include "PlayerShot.h"
+#include <sstream>
 
 Player::Player(Graphics* graphics) : Player(graphics, GameObject::SetupLua("Definitions\\Player.lua", "player"))
 {
@@ -127,16 +128,32 @@ void Player::Initialise(Graphics * graphics, lua_State* L, luabridge::LuaRef ref
 {
 	auto weapons = ref["weapons"];
 	Weapons.clear();
+
+	if (weapons.isNil()) return;
+	if (!weapons.isTable())
+	{
+		throw std::runtime_error("Invalid value for weapons, expects list");
+	}
 	for (int i = 1; i <= weapons.length(); i++)
 	{
 		auto weaponRef = weapons[i];
+		if (!weaponRef.isTable())
+		{
+			throw std::runtime_error("Invalid value for weapons, expects table");
+		}
 		Weapon weapon;
-		std::string weaponTypeString = weaponRef["identifier"];
+		std::string weaponTypeString = GetString(weaponRef, "identifier", "blank");
 		weapon.Ref = luabridge::getGlobal(L, weaponTypeString.data());
-		weapon.Reload = weaponRef["reload"];
-		weapon.InitialState = weaponRef["initialState"].cast<std::string>();
-		weapon.PositionX = weaponRef["position"][1];
-		weapon.PositionY = weaponRef["position"][2];
+		if (weapon.Ref.isNil())
+		{
+			std::stringstream error;
+			error << "Could not find weapon named " << weaponTypeString;
+			throw std::runtime_error(error.str());
+		}
+		weapon.Reload = GetInt(weaponRef, "reload", 0);
+		weapon.InitialState = GetString(weaponRef, "initialState", "none");
+		weapon.PositionX = GetInt(weaponRef, "position", 1, 0);
+		weapon.PositionY = GetInt(weaponRef, "position", 2, 0);
 		weapon.L = L;
 		weapon.RemainingReload = 0;
 		weapon.GraphicsStore = graphics;

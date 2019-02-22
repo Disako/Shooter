@@ -1,5 +1,5 @@
 #include "Graphics.h"
-
+#include <sstream>
 
 
 Graphics::Graphics()
@@ -20,7 +20,15 @@ SDL_Surface* Graphics::LoadImage(std::string filename)
 	if (image)
 		return image;
 
-	image = SDL_DisplayFormat(SDL_LoadBMP(filename.data()));
+	image = SDL_LoadBMP(filename.data());
+	if (!image)
+	{
+		std::stringstream error;
+		error << "Could not find image: " << filename;
+		throw std::runtime_error(error.str());
+	}
+
+	image = SDL_DisplayFormat(image);
 
 	Uint32 colorkey = SDL_MapRGB(image->format, 0, 0xFF, 0);
 

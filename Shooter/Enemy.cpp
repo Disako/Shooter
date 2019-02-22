@@ -27,7 +27,7 @@ SDL_Surface * Enemy::GetCurrentImage()
 
 void Enemy::Initialise(Graphics * graphics, lua_State* L, luabridge::LuaRef ref)
 {
-	HP = ref["hp"];
+	HP = GetInt(ref, "hp", 1);
 }
 
 void Enemy::Damage(unsigned int damage)
