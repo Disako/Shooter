@@ -2,13 +2,18 @@
 #include "SDL.h"
 #include "Graphics.h"
 #include "Enemy.h"
-#include "BasicBullet.h"
+#include <string>
+#include <tuple>
+#include "PlayerShot.h"
 
-Player::Player(Graphics* graphics)
+Player::Player(Graphics* graphics) : Player(graphics, GameObject::SetupLua("Definitions\\Player.lua", "player"))
 {
-	Initialise(graphics);
 }
 
+Player::Player(Graphics* graphics, std::tuple<lua_State*, luabridge::LuaRef> luaRef) : GameObject(graphics, luaRef)
+{
+	Initialise(graphics, std::get<0>(luaRef), std::get<1>(luaRef));
+}
 
 Player::~Player()
 {
@@ -30,7 +35,26 @@ void Player::DoUpdate(GameState* state)
 	if (state->Keys[SDLK_RIGHT] || state->Keys[SDLK_d]) left--;
 	if (Location.x < Location.w / 8) left--;
 
-	if ((state->Keys[SDLK_SPACE] || state->Keys[SDLK_RETURN]) && Reload == 0)
+	auto firing = (state->Keys[SDLK_SPACE] || state->Keys[SDLK_RETURN]);
+	for (unsigned int i = 0; i < Weapons.size(); i++)
+	{
+		if (firing && Weapons[i].RemainingReload == 0)
+		{
+			auto shot = new PlayerShot(Weapons[i].GraphicsStore, Weapons[i].L, Weapons[i].Ref, Weapons[i].InitialState);
+
+			shot->Location.x = Location.x + Weapons[i].PositionX;
+			shot->Location.y = Location.y + Weapons[i].PositionY;
+
+			state->GameObjects.push_back(shot);
+
+			Weapons[i].RemainingReload = Weapons[i].Reload;
+		}
+		else if (Weapons[i].RemainingReload > 0)
+		{
+			Weapons[i].RemainingReload--;
+		}
+	}
+	/*if ((state->Keys[SDLK_SPACE] || state->Keys[SDLK_RETURN]) && Reload == 0)
 	{
 		BasicBullet* bullet = new BasicBullet(GraphicsStore);
 		bullet->Location.x = Location.x + Location.w / 2 - bullet->Location.w / 2;
@@ -41,7 +65,7 @@ void Player::DoUpdate(GameState* state)
 	else if (Reload > 0)
 	{
 		Reload--;
-	}
+	}*/
 
 	if (up > 0)
 	{
@@ -99,37 +123,24 @@ void Player::DoUpdate(GameState* state)
 	}
 }
 
-std::vector<SDL_Rect> Player::GetCollison()
+void Player::Initialise(Graphics * graphics, lua_State* L, luabridge::LuaRef ref)
 {
-	SDL_Rect r1, r2, r3;
-	r1.x = 29;
-	r1.y = 20;
-	r1.w = 22;
-	r1.h = 37;
+	auto weapons = ref["weapons"];
+	Weapons.clear();
+	for (int i = 1; i <= weapons.length(); i++)
+	{
+		auto weaponRef = weapons[i];
+		Weapon weapon;
+		std::string weaponTypeString = weaponRef["identifier"];
+		weapon.Ref = luabridge::getGlobal(L, weaponTypeString.data());
+		weapon.Reload = weaponRef["reload"];
+		weapon.InitialState = weaponRef["initialState"].cast<std::string>();
+		weapon.PositionX = weaponRef["position"][1];
+		weapon.PositionY = weaponRef["position"][2];
+		weapon.L = L;
+		weapon.RemainingReload = 0;
+		weapon.GraphicsStore = graphics;
 
-	r2.x = 14;
-	r2.y = 46;
-	r2.w = 15;
-	r2.h = 22;
-
-	r3.x = 51;
-	r3.y = 46;
-	r3.w = 15;
-	r3.h = 22;
-
-	return { r1, r2, r3 };
-}
-
-void Player::Initialise(Graphics* graphics)
-{
-	GraphicsStore = graphics;
-
-	Collision = GetCollison();
-
-	GameObject::Initialise(graphics);
-}
-
-SDL_Surface* Player::GetCurrentImage()
-{
-	return GraphicsStore->LoadImage("Images\\Ship.bmp");
+		Weapons.push_back(weapon);
+	}
 }

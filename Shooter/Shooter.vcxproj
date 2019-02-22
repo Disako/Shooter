@@ -138,17 +138,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="Definitions\Enemies.lua" />
+    <None Include="Definitions\Player.lua" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="app.cpp" />
-    <ClCompile Include="BasicBullet.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="Graphics.cpp" />
+    <ClCompile Include="AutoMove.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerShot.cpp" />
   </ItemGroup>
@@ -156,13 +157,14 @@
     <ClInclude Include="..\LuaBridge\Source\LuaBridge\LuaBridge.h" />
     <ClInclude Include="..\packages\SDL.1.2.15.16\build\native\include\SDL.h" />
     <ClInclude Include="..\packages\SDL.1.2.15.16\build\native\include\SDL_timer.h" />
-    <ClInclude Include="BasicBullet.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Graphics.h" />
+    <ClInclude Include="AutoMove.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerShot.h" />
+    <ClInclude Include="Position.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

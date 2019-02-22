@@ -22,6 +22,9 @@
     <None Include="Definitions\Enemies.lua">
       <Filter>Definitions</Filter>
     </None>
+    <None Include="Definitions\Player.lua">
+      <Filter>Definitions</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="app.cpp">
@@ -45,7 +48,7 @@
     <ClCompile Include="PlayerShot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BasicBullet.cpp">
+    <ClCompile Include="AutoMove.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -74,10 +77,13 @@
     <ClInclude Include="PlayerShot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BasicBullet.h">
+    <ClInclude Include="..\LuaBridge\Source\LuaBridge\LuaBridge.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\LuaBridge\Source\LuaBridge\LuaBridge.h">
+    <ClInclude Include="Position.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoMove.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

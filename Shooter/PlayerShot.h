@@ -1,13 +1,16 @@
 #pragma once
-#include "GameObject.h"
+#include "AutoMove.h"
 class PlayerShot :
-	public GameObject
+	public AutoMove
 {
 public:
-	PlayerShot();
+	PlayerShot(Graphics* graphics, lua_State* L, luabridge::LuaRef ref, std::string initialState);
 	~PlayerShot();
 	virtual void DoUpdate(GameState* state) override;
 
-	virtual unsigned int GetDamage();
+protected:
+private:
+	void Initialise(Graphics* graphics, lua_State* L, luabridge::LuaRef ref);
+	int Damage;
 };
 

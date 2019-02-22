@@ -7,9 +7,12 @@ extern "C" {
 #include "GameObject.h"
 #include "SDL.h"
 #include "Graphics.h"
+#include "Position.h"
+#include <Tuple>
 
-GameObject::GameObject()
+GameObject::GameObject(Graphics* graphics, std::tuple<lua_State*, luabridge::LuaRef> luaRef)
 {
+	Initialise(graphics, std::get<0>(luaRef), std::get<1>(luaRef));
 }
 
 
@@ -37,15 +40,31 @@ void GameObject::SetCollision(luabridge::LuaRef ref)
 	}
 }
 
+std::tuple<lua_State*, luabridge::LuaRef> GameObject::SetupLua(std::string file, std::string type)
+{
+	lua_State* L = luaL_newstate();
+
+	if (luaL_dofile(L, file.data()))
+	{
+		auto error = lua_tostring(L, -1);
+		fprintf(stderr, "luaL_dofile failed: %s\n", error);
+	}
+	luaL_openlibs(L);
+	lua_pcall(L, 0, 0, 0);
+
+	luabridge::getGlobalNamespace(L)
+		.beginClass<Position>("position")
+		.addProperty("x", &Position::getX, &Position::setX)
+		.addProperty("y", &Position::getY, &Position::setY)
+		.addProperty("state", &Position::getState, &Position::setState);
+
+	return std::make_tuple(L, luabridge::getGlobal(L, type.data()));
+}
+
 void GameObject::SetPosition(int x, int y)
 {
 	Location.x = x;
 	Location.y = y;
-}
-
-std::vector<SDL_Rect> GameObject::GetCollison()
-{
-	return std::vector<SDL_Rect>();
 }
 
 bool GameObject::CheckCollision(GameObject * otherObject)
@@ -90,11 +109,15 @@ bool GameObject::IsOutOfBounds(GameState* state)
 
 SDL_Surface * GameObject::GetCurrentImage()
 {
-	return nullptr;
+	return Image;
 }
 
-void GameObject::Initialise(Graphics* graphics)
+void GameObject::Initialise(Graphics* graphics, lua_State* L, luabridge::LuaRef ref)
 {
+	SetCollision(ref["collision"]);
+
+	Image = graphics->LoadImage(ref["image"]);
+
 	SDL_Rect rect = GetCurrentImage()->clip_rect;
 	Location.w = rect.w;
 	Location.h = rect.h;

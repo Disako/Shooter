@@ -13,7 +13,7 @@ extern "C" {
 class GameObject
 {
 public:
-	GameObject();
+	GameObject(Graphics* graphics, std::tuple<lua_State*, luabridge::LuaRef> luaRef);
 	virtual ~GameObject();
 
 	SDL_Rect Location;
@@ -22,13 +22,15 @@ public:
 	void Draw(SDL_Surface* screen);
 	virtual void DoUpdate(GameState* state);
 	bool IsOutOfBounds(GameState* state);
-	virtual std::vector<SDL_Rect> GetCollison();
 	bool CheckCollision(GameObject* otherObject);
 	std::vector<SDL_Rect> Collision;
 	void SetPosition(int x, int y);
+	SDL_Surface* Image;
 protected:
 	virtual SDL_Surface* GetCurrentImage();
-	virtual void Initialise(Graphics* graphics);
+	static std::tuple<lua_State*, luabridge::LuaRef> SetupLua(std::string file, std::string type);
+private:
 	void SetCollision(luabridge::LuaRef ref);
+	void Initialise(Graphics* graphics, lua_State* L, luabridge::LuaRef ref);
 };
 
