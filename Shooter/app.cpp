@@ -4,11 +4,15 @@
 #include "Graphics.h"
 #include "Enemy.h"
 #include <vector>
+#include <sstream>
+#include <string>
+#include "Position.h"
 
-void CreateShip(GameState* state, Graphics* graphics);
+void CreateShip(GameState* state, Graphics* graphics, lua_State* L);
 void DoUpdate(GameState* state);
 void DrawScreen(SDL_Surface* screen, GameState* state);
-void AddEnemy(GameState* state, Graphics* graphics);
+void AddEnemy(GameState* state, Graphics* graphics, lua_State* L);
+lua_State* SetupLua();
 
 int main(int argc, char* args[])
 {
@@ -25,12 +29,14 @@ int main(int argc, char* args[])
 	screen = SDL_SetVideoMode(state->ScreenWidth, state->ScreenHeight, 32, SDL_SWSURFACE);
 
 	Graphics* graphics = new Graphics();
+
+	lua_State* L = SetupLua();
 	
-	CreateShip(state, graphics);
+	CreateShip(state, graphics, L);
 
 	Uint32 lastRefreshTicks = SDL_GetTicks();
 
-	AddEnemy(state, graphics);
+	AddEnemy(state, graphics, L);
 
 	do
 	{
@@ -60,9 +66,37 @@ int main(int argc, char* args[])
 	return 0;
 }
 
-void AddEnemy(GameState* state, Graphics* graphics)
+lua_State* SetupLua()
 {
-	Enemy* enemy = new Enemy(graphics, "spinner", "right");
+	lua_State* L = luaL_newstate();
+
+	const int fileCount = 2;
+	std::string files[fileCount] = { "Definitions\\Enemies.lua", "Definitions\\Player.lua" };
+
+	for (unsigned int i = 0; i < fileCount; i++)
+	{
+		if (luaL_dofile(L, files[i].data()))
+		{
+			std::stringstream error;
+			error << "luaL_dofile failed: " << lua_tostring(L, -1);
+			throw std::runtime_error(error.str());
+		}
+	}
+	luaL_openlibs(L);
+	lua_pcall(L, 0, 0, 0);
+
+	luabridge::getGlobalNamespace(L)
+		.beginClass<Position>("position")
+		.addProperty("x", &Position::getX, &Position::setX)
+		.addProperty("y", &Position::getY, &Position::setY)
+		.addProperty("state", &Position::getState, &Position::setState);
+
+	return L;
+}
+
+void AddEnemy(GameState* state, Graphics* graphics, lua_State* L)
+{
+	Enemy* enemy = new Enemy(graphics, L, "spinner", "right");
 
 	enemy->Location.x = state->ScreenWidth / 2;
 	enemy->Location.y = -enemy->Location.h;
@@ -70,9 +104,9 @@ void AddEnemy(GameState* state, Graphics* graphics)
 	state->GameObjects.push_back(enemy);
 }
 
-void CreateShip(GameState* state, Graphics* graphics)
+void CreateShip(GameState* state, Graphics* graphics, lua_State* L)
 {
-	Player* ship = new Player(graphics);
+	Player* ship = new Player(graphics, L);
 
 	ship->Location.x = 100;
 	ship->Location.y = 100;

@@ -18,11 +18,11 @@ class Player :
 	public GameObject
 {
 public:
-	Player(Graphics* graphics);
+	Player(Graphics* graphics, lua_State* L);
 	~Player() override;
 	void DoUpdate(GameState* state) override;
 private:
-	Player(Graphics* graphics, std::tuple<lua_State*, luabridge::LuaRef> luaRef);
+	Player(Graphics* graphics, lua_State* L, luabridge::LuaRef ref);
 	void Initialise(Graphics* graphics, lua_State* L, luabridge::LuaRef ref);
 	SDL_Rect Speed;
 	int Reload;

@@ -12,9 +12,9 @@ extern "C" {
 #include <stdexcept>
 #include <sstream>
 
-GameObject::GameObject(Graphics* graphics, std::tuple<lua_State*, luabridge::LuaRef> luaRef)
+GameObject::GameObject(Graphics* graphics, lua_State* L, luabridge::LuaRef ref)
 {
-	Initialise(graphics, std::get<0>(luaRef), std::get<1>(luaRef));
+	Initialise(graphics, L, ref);
 }
 
 
@@ -48,7 +48,7 @@ void GameObject::SetCollision(luabridge::LuaRef ref)
 		{
 			std::runtime_error("Invalid value for collision, expects table of lists");
 		}
-		else if (!crect.length() == 4)
+		else if (crect.length() != 4)
 		{
 			std::runtime_error("Invalid value for collision, expects table of lists of length 4");
 		}
@@ -60,26 +60,24 @@ void GameObject::SetCollision(luabridge::LuaRef ref)
 	}
 }
 
-std::tuple<lua_State*, luabridge::LuaRef> GameObject::SetupLua(std::string file, std::string type)
+luabridge::LuaRef GameObject::GetRef(lua_State* L, std::string type)
 {
-	lua_State* L = luaL_newstate();
+	auto ref = luabridge::getGlobal(L, type.data());
 
-	if (luaL_dofile(L, file.data()))
+	if (ref.isNil())
 	{
 		std::stringstream error;
-		error << "luaL_dofile failed: " << lua_tostring(L, -1);
+		error << "Could not find object: " << type;
 		throw std::runtime_error(error.str());
 	}
-	luaL_openlibs(L);
-	lua_pcall(L, 0, 0, 0);
+	else if (!ref.isTable())
+	{
+		std::stringstream error;
+		error << "Error loading " << type << ", expected a table";
+		throw std::runtime_error(error.str());
+	}
 
-	luabridge::getGlobalNamespace(L)
-		.beginClass<Position>("position")
-		.addProperty("x", &Position::getX, &Position::setX)
-		.addProperty("y", &Position::getY, &Position::setY)
-		.addProperty("state", &Position::getState, &Position::setState);
-
-	return std::make_tuple(L, luabridge::getGlobal(L, type.data()));
+	return ref;
 }
 
 void GameObject::SetPosition(int x, int y)

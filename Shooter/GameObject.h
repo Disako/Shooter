@@ -26,14 +26,14 @@ public:
 	void SetPosition(int x, int y);
 	SDL_Surface* Image;
 protected:
-	GameObject(Graphics* graphics, std::tuple<lua_State*, luabridge::LuaRef> luaRef);
+	GameObject(Graphics* graphics, lua_State* L, luabridge::LuaRef ref);
 	virtual SDL_Surface* GetCurrentImage();
-	static std::tuple<lua_State*, luabridge::LuaRef> SetupLua(std::string file, std::string type);
 	int GetInt(luabridge::LuaRef ref, std::string key, int defaultValue);
 	int GetInt(luabridge::LuaRef ref, std::string key, int index, int defaultValue);
 	int GetInt(luabridge::LuaRef ref, int index, std::string parent);
 	std::string GetString(luabridge::LuaRef ref, std::string key, std::string defaultValue);
 	luabridge::LuaRef GetFunction(luabridge::LuaRef ref, std::string key);
+	static luabridge::LuaRef GetRef(lua_State* L, std::string type);
 private:
 	void SetCollision(luabridge::LuaRef ref);
 	void Initialise(Graphics* graphics, lua_State* L, luabridge::LuaRef ref);

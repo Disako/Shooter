@@ -7,13 +7,13 @@ extern "C" {
 }
 #include "Position.h"
 
-Enemy::Enemy(Graphics* graphics, std::string type, std::string initialState) : Enemy(graphics, GameObject::SetupLua("Definitions\\Enemies.lua", type), initialState)
+Enemy::Enemy(Graphics* graphics, lua_State* L, std::string type, std::string initialState) : Enemy(graphics, L, GameObject::GetRef(L, type), initialState)
 {
 }
 
-Enemy::Enemy(Graphics* graphics, std::tuple<lua_State*, luabridge::LuaRef> luaRef, std::string initialState) : AutoMove(graphics, luaRef, initialState)
+Enemy::Enemy(Graphics* graphics, lua_State* L, luabridge::LuaRef ref, std::string initialState) : AutoMove(graphics, L, ref, initialState)
 {
-	Initialise(graphics, std::get<0>(luaRef), std::get<1>(luaRef));
+	Initialise(graphics, L, ref);
 }
 
 Enemy::~Enemy()

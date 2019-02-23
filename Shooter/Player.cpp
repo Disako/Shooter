@@ -7,13 +7,13 @@
 #include "PlayerShot.h"
 #include <sstream>
 
-Player::Player(Graphics* graphics) : Player(graphics, GameObject::SetupLua("Definitions\\Player.lua", "player"))
+Player::Player(Graphics* graphics, lua_State* L) : Player(graphics, L, GameObject::GetRef(L, "player"))
 {
 }
 
-Player::Player(Graphics* graphics, std::tuple<lua_State*, luabridge::LuaRef> luaRef) : GameObject(graphics, luaRef)
+Player::Player(Graphics* graphics, lua_State* L, luabridge::LuaRef ref) : GameObject(graphics, L, ref)
 {
-	Initialise(graphics, std::get<0>(luaRef), std::get<1>(luaRef));
+	Initialise(graphics, L, ref);
 }
 
 Player::~Player()
@@ -55,18 +55,6 @@ void Player::DoUpdate(GameState* state)
 			Weapons[i].RemainingReload--;
 		}
 	}
-	/*if ((state->Keys[SDLK_SPACE] || state->Keys[SDLK_RETURN]) && Reload == 0)
-	{
-		BasicBullet* bullet = new BasicBullet(GraphicsStore);
-		bullet->Location.x = Location.x + Location.w / 2 - bullet->Location.w / 2;
-		bullet->Location.y = Location.y;
-		state->GameObjects.push_back(bullet);
-		Reload = 10;
-	}
-	else if (Reload > 0)
-	{
-		Reload--;
-	}*/
 
 	if (up > 0)
 	{
@@ -143,13 +131,7 @@ void Player::Initialise(Graphics * graphics, lua_State* L, luabridge::LuaRef ref
 		}
 		Weapon weapon;
 		std::string weaponTypeString = GetString(weaponRef, "identifier", "blank");
-		weapon.Ref = luabridge::getGlobal(L, weaponTypeString.data());
-		if (weapon.Ref.isNil())
-		{
-			std::stringstream error;
-			error << "Could not find weapon named " << weaponTypeString;
-			throw std::runtime_error(error.str());
-		}
+		weapon.Ref = GetRef(L, weaponTypeString.data());
 		weapon.Reload = GetInt(weaponRef, "reload", 0);
 		weapon.InitialState = GetString(weaponRef, "initialState", "none");
 		weapon.PositionX = GetInt(weaponRef, "position", 1, 0);

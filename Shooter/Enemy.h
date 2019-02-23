@@ -12,7 +12,7 @@ class Enemy :
 	public AutoMove
 {
 public:
-	Enemy(Graphics* graphics, std::string type, std::string initialState);
+	Enemy(Graphics* graphics, lua_State* L, std::string type, std::string initialState);
 	~Enemy();
 	int HP;
 	void Damage(unsigned int damage);
@@ -20,7 +20,7 @@ public:
 protected:
 	SDL_Surface* GetCurrentImage() override;
 private:
-	Enemy(Graphics* graphics, std::tuple<lua_State*, luabridge::LuaRef> luaRef, std::string initialState);
+	Enemy(Graphics* graphics, lua_State* L, luabridge::LuaRef ref, std::string initialState);
 	void Initialise(Graphics* graphics, lua_State* L, luabridge::LuaRef ref);
 };
 

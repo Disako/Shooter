@@ -2,7 +2,7 @@
 #include "Enemy.h"
 #include <tuple>
 
-PlayerShot::PlayerShot(Graphics* graphics, lua_State* L, luabridge::LuaRef ref, std::string initialState) : AutoMove(graphics, std::make_tuple(L, ref), initialState)
+PlayerShot::PlayerShot(Graphics* graphics, lua_State* L, luabridge::LuaRef ref, std::string initialState) : AutoMove(graphics, L, ref, initialState)
 {
 	Initialise(graphics, L, ref);
 }
