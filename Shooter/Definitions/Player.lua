@@ -14,7 +14,9 @@ player = {
 			fireSound = "Sounds\\NFF-laser.wav",
 			fireVolume = 10
 		}
-	}
+	},
+	explodeSound = "Sounds\\NFF-cannon.wav",
+	explodeVolume = 20
 }
 basicBullet = {
 	image = "images\\BasicBullet.bmp",

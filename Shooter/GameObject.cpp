@@ -105,11 +105,31 @@ SDL_Surface * GameObject::GetCurrentImage()
 	return Image;
 }
 
+void GameObject::Destroy()
+{
+	if (ExplodeSound)
+	{
+		Mix_VolumeChunk(ExplodeSound, (MIX_MAX_VOLUME * ExplodeVolume) / 100);
+		Mix_PlayChannel(-1, ExplodeSound, 0);
+	}
+}
+
 void GameObject::Initialise(Resources* resources, lua_State* L, luabridge::LuaRef ref)
 {
 	SetCollision(ref["collision"]);
 
 	Image = resources->LoadImage(GetString(ref, "image", "none"));
+
+	auto explodeSound = GetString(ref, "explodeSound", "");
+	if (explodeSound != "")
+	{
+		ExplodeSound = resources->LoadSound(explodeSound);
+	}
+	else
+	{
+		ExplodeSound = nullptr;
+	}
+	ExplodeVolume = GetInt(ref, "explodeVolume", 100);
 
 	Frame = GetInt(ref, "initialFrame", 0);
 

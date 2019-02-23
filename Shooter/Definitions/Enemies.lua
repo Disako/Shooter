@@ -15,5 +15,7 @@ spinner = {
 			if position.state == "right" then position.frame = position.frame + 1 else position.frame = position.frame - 1 end
 		end
 		return position
-	end
+	end,
+	explodeSound = "Sounds\\NFF-cannon.wav",
+	explodeVolume = 20
 }

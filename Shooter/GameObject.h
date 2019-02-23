@@ -23,6 +23,7 @@ public:
 	void Draw(SDL_Surface* screen);
 	virtual void DoUpdate(GameState* state);
 	bool CheckCollision(GameObject* otherObject);
+	void Destroy();
 protected:
 	GameObject(Resources* resources, lua_State* L, luabridge::LuaRef ref);
 	virtual SDL_Surface* GetCurrentImage();
@@ -34,5 +35,7 @@ private:
 	std::vector<SDL_Rect> Collision;
 	void SetCollision(luabridge::LuaRef ref);
 	void Initialise(Resources* resources, lua_State* L, luabridge::LuaRef ref);
+	Mix_Chunk* ExplodeSound;
+	int ExplodeVolume;
 };
 
