@@ -12,5 +12,6 @@ protected:
 private:
 	void Initialise(Graphics* graphics, lua_State* L, luabridge::LuaRef ref);
 	luabridge::LuaRef Movement = nullptr;
+	int Count = 0;
 };
 

@@ -89,6 +89,8 @@ lua_State* SetupLua()
 		.beginClass<Position>("position")
 		.addProperty("x", &Position::getX, &Position::setX)
 		.addProperty("y", &Position::getY, &Position::setY)
+		.addProperty("frame", &Position::getFrame, &Position::setFrame)
+		.addProperty("count", &Position::getCount, &Position::setCount)
 		.addProperty("state", &Position::getState, &Position::setState);
 
 	return L;

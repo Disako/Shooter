@@ -27,6 +27,8 @@ protected:
 	GameObject(Graphics* graphics, lua_State* L, luabridge::LuaRef ref);
 	virtual SDL_Surface* GetCurrentImage();
 	bool IsOutOfBounds(GameState* state);
+	int Frame;
+	std::vector<SDL_Rect> Frames;
 private:
 	SDL_Surface* Image;
 	std::vector<SDL_Rect> Collision;

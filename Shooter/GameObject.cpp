@@ -24,7 +24,7 @@ GameObject::~GameObject()
 
 void GameObject::Draw(SDL_Surface * screen)
 {
-	SDL_BlitSurface(GetCurrentImage(), NULL, screen, new SDL_Rect(Location));
+	SDL_BlitSurface(GetCurrentImage(), new SDL_Rect(Frames[Frame]), screen, new SDL_Rect(Location));
 }
 
 void GameObject::SetCollision(luabridge::LuaRef ref)
@@ -111,8 +111,52 @@ void GameObject::Initialise(Graphics* graphics, lua_State* L, luabridge::LuaRef 
 
 	Image = graphics->LoadImage(GetString(ref, "image", "none"));
 
-	SDL_Rect rect = GetCurrentImage()->clip_rect;
-	Location.w = rect.w;
-	Location.h = rect.h;
+	Frame = GetInt(ref, "initialFrame", 0);
+
+	auto frameWidth = GetInt(ref, "frameSize", 1, 0);
+	auto frameHeight = GetInt(ref, "frameSize", 2, 0);
+
+	Frames.clear();
+
+	if (frameWidth == 0 || frameHeight == 0)
+	{
+		SDL_Rect rect = GetCurrentImage()->clip_rect;
+		Location.w = rect.w;
+		Location.h = rect.h;
+
+		SDL_Rect frame;
+		frame.x = 0;
+		frame.y = 0;
+		frame.w = rect.w;
+		frame.h = rect.h;
+		Frames.push_back(frame);
+	}
+	else
+	{
+		Location.w = frameWidth;
+		Location.h = frameHeight;
+
+		SDL_Rect rect = GetCurrentImage()->clip_rect;
+
+		int x = 0;
+		int y = 0;
+
+		while (y + frameHeight <= rect.h)
+		{
+			while (x + frameWidth <= rect.w)
+			{
+				SDL_Rect frame;
+				frame.x = x;
+				frame.y = y;
+				frame.w = frameWidth;
+				frame.h = frameHeight;
+				Frames.push_back(frame);
+
+				x+= frameWidth;
+			}
+			x = 0;
+			y += frameHeight;
+		}
+	}
 }
 
