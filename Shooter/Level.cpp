@@ -52,6 +52,29 @@ Level* Level::DoUpdate(GameState* state, Resources* resources)
 		{
 			nextLevel = new Level(L, GetString(Events[Index], "level", "blank"));
 		}
+		else if (action == "music")
+		{
+			auto musicName = GetString(Events[Index], "file", "none");
+			if (musicName != resources->CurrentMusic)
+			{
+				if (Mix_PlayingMusic())
+				{
+					Mix_FadeOutMusic(GetInt(Events[Index], "fade", 1));
+				}
+				auto music = resources->LoadMusic(musicName);
+				Mix_VolumeMusic(GetInt(Events[Index], "volume", 100));
+				Mix_FadeInMusic(music, -1, GetInt(Events[Index], "fade", 1));
+				resources->CurrentMusic = musicName;
+			}
+		}
+		else if (action == "stopmusic")
+		{
+			if (Mix_PlayingMusic())
+			{
+				Mix_FadeOutMusic(GetInt(Events[Index], "fade", 1));
+				resources->CurrentMusic = "";
+			}
+		}
 		else
 		{
 			std::stringstream error;

@@ -14,6 +14,8 @@ Resources::~Resources()
 		SDL_FreeSurface(x.second);
 	for (auto& x : AddedSounds)
 		Mix_FreeChunk(x.second);
+	for (auto& x : AddedMusic)
+		Mix_FreeMusic(x.second);
 }
 
 SDL_Surface* Resources::LoadImage(std::string filename)
@@ -61,4 +63,25 @@ Mix_Chunk* Resources::LoadSound(std::string filename)
 	AddedSounds[filename] = sound;
 
 	return sound;
+}
+
+Mix_Music * Resources::LoadMusic(std::string filename)
+{
+	Mix_Music* music = AddedMusic[filename];
+
+	if (music)
+		return music;
+
+	music = Mix_LoadMUS(filename.data());
+
+	if (!music)
+	{
+		std::stringstream error;
+		error << "Could not find music: " << filename;
+		throw std::runtime_error(error.str());
+	}
+
+	AddedMusic[filename] = music;
+
+	return music;
 }
