@@ -1,7 +1,7 @@
 #include "SDL.h"
 #include "Player.h"
 #include "SDL_timer.h"
-#include "Graphics.h"
+#include "Resources.h"
 #include "Enemy.h"
 #include <vector>
 #include <sstream>
@@ -9,14 +9,13 @@
 #include "Position.h"
 #include "Level.h"
 
-void CreateShip(GameState* state, Graphics* graphics, lua_State* L);
-Level* DoUpdate(GameState* state, Graphics* graphics, Level* level);
+void CreateShip(GameState* state, Resources* resources, lua_State* L);
+Level* DoUpdate(GameState* state, Resources* resources, Level* level);
 void DrawScreen(SDL_Surface* screen, GameState* state);
 lua_State* SetupLua();
 
 int main(int argc, char* args[])
 {
-	SDL_Surface* screen = NULL;
 	SDL_Event event;
 
 	GameState* state = new GameState();
@@ -26,13 +25,16 @@ int main(int argc, char* args[])
 
 	SDL_Init(SDL_INIT_EVERYTHING);
 	
-	screen = SDL_SetVideoMode(state->ScreenWidth, state->ScreenHeight, 32, SDL_SWSURFACE);
+	auto window = SDL_CreateWindow("Shooter", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, state->ScreenWidth, state->ScreenHeight, SDL_WINDOW_SHOWN);
+	SDL_Surface* screen = SDL_GetWindowSurface(window);
 
-	Graphics* graphics = new Graphics();
+	Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096);
+
+	Resources* resources = new Resources(window);
 
 	lua_State* L = SetupLua();
 	
-	CreateShip(state, graphics, L);
+	CreateShip(state, resources, L);
 
 	Uint32 lastRefreshTicks = SDL_GetTicks();
 
@@ -40,10 +42,9 @@ int main(int argc, char* args[])
 
 	do
 	{
-
 		SDL_PollEvent(&event);
-		state->Keys = SDL_GetKeyState(NULL);
-		level = DoUpdate(state, graphics, level);
+		state->Keys = SDL_GetKeyboardState(NULL);
+		level = DoUpdate(state, resources, level);
 		DrawScreen(screen, state);
 
 		Uint32 currentTicks;
@@ -52,15 +53,17 @@ int main(int argc, char* args[])
 		if(lastRefreshTicks + 17 > currentTicks)
 			SDL_Delay(lastRefreshTicks + 17 - currentTicks);
 
-		SDL_Flip(screen);
+		SDL_UpdateWindowSurface(window);
 
 		lastRefreshTicks = SDL_GetTicks();
 
 	} while (!(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE || event.type == SDL_QUIT));
 
 	delete state;
-	delete graphics;
+	delete resources;
 
+	Mix_CloseAudio();
+	SDL_DestroyWindow(window);
 	SDL_Quit();
 
 	return 0;
@@ -96,9 +99,9 @@ lua_State* SetupLua()
 	return L;
 }
 
-void CreateShip(GameState* state, Graphics* graphics, lua_State* L)
+void CreateShip(GameState* state, Resources* resources, lua_State* L)
 {
-	Player* ship = new Player(graphics, L);
+	Player* ship = new Player(resources, L);
 
 	ship->Location.x = 100;
 	ship->Location.y = 100;
@@ -106,9 +109,9 @@ void CreateShip(GameState* state, Graphics* graphics, lua_State* L)
 	state->GameObjects.push_back(ship);
 }
 
-Level* DoUpdate(GameState* state, Graphics* graphics, Level* level)
+Level* DoUpdate(GameState* state, Resources* resources, Level* level)
 {
-	level = level->DoUpdate(state, graphics);
+	level = level->DoUpdate(state, resources);
 
 	for (unsigned int i = 0; i < state->GameObjects.size(); i++)
 	{
@@ -136,7 +139,7 @@ Level* DoUpdate(GameState* state, Graphics* graphics, Level* level)
 
 void DrawScreen(SDL_Surface* screen, GameState* state)
 {
-	SDL_FillRect(SDL_GetVideoSurface(), NULL, SDL_MapRGB(SDL_GetVideoSurface()->format, 0, 0, 0));
+	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
 
 	for (unsigned int i = 0; i < state->GameObjects.size(); i++)
 	{

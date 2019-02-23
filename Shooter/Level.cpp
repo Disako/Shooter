@@ -26,7 +26,7 @@ Level::~Level()
 {
 }
 
-Level* Level::DoUpdate(GameState* state, Graphics* graphics) 
+Level* Level::DoUpdate(GameState* state, Resources* resources) 
 {
 	Level* nextLevel = this;
 
@@ -38,7 +38,7 @@ Level* Level::DoUpdate(GameState* state, Graphics* graphics)
 
 		if (action == "spawn")
 		{
-			auto enemy = new Enemy(graphics, L, GetString(Events[Index], "enemy", "blank"), GetString(Events[Index], "state", "None"));
+			auto enemy = new Enemy(resources, L, GetString(Events[Index], "enemy", "blank"), GetString(Events[Index], "state", "None"));
 			enemy->Location.x = GetInt(Events[Index], "location", 1, 0);
 			enemy->Location.y = GetInt(Events[Index], "location", 2, 0);
 

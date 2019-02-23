@@ -11,19 +11,21 @@ struct Weapon
 	int PositionX, PositionY;
 	lua_State* L;
 	int RemainingReload = 0;
-	Graphics* GraphicsStore;
+	Resources* ResourcesStore;
+	Mix_Chunk* FireSound;
+	int FireVolume;
 };
 
 class Player :
 	public GameObject
 {
 public:
-	Player(Graphics* graphics, lua_State* L);
+	Player(Resources* resources, lua_State* L);
 	~Player() override;
 	void DoUpdate(GameState* state) override;
 private:
-	Player(Graphics* graphics, lua_State* L, luabridge::LuaRef ref);
-	void Initialise(Graphics* graphics, lua_State* L, luabridge::LuaRef ref);
+	Player(Resources* resources, lua_State* L, luabridge::LuaRef ref);
+	void Initialise(Resources* resources, lua_State* L, luabridge::LuaRef ref);
 	SDL_Rect Speed;
 	int Reload;
 	std::vector<Weapon> Weapons;

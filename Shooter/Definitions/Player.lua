@@ -8,9 +8,11 @@ player = {
 	weapons = {
 		{
 			identifier = "basicBullet",
-			reload = 10,
+			reload = 20,
 			initialState = "normal",
-			position = { 19, 15 }
+			position = { 17, 15 },
+			fireSound = "Sounds\\NFF-laser.wav",
+			fireVolume = 10
 		}
 	}
 }

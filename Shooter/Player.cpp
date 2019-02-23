@@ -1,19 +1,19 @@
 #include "Player.h"
 #include "SDL.h"
-#include "Graphics.h"
+#include "Resources.h"
 #include "Enemy.h"
 #include <string>
 #include <tuple>
 #include "PlayerShot.h"
 #include <sstream>
 
-Player::Player(Graphics* graphics, lua_State* L) : Player(graphics, L, GameObject::GetRef(L, "player"))
+Player::Player(Resources* resources, lua_State* L) : Player(resources, L, GameObject::GetRef(L, "player"))
 {
 }
 
-Player::Player(Graphics* graphics, lua_State* L, luabridge::LuaRef ref) : GameObject(graphics, L, ref)
+Player::Player(Resources* resources, lua_State* L, luabridge::LuaRef ref) : GameObject(resources, L, ref)
 {
-	Initialise(graphics, L, ref);
+	Initialise(resources, L, ref);
 }
 
 Player::~Player()
@@ -26,22 +26,22 @@ void Player::DoUpdate(GameState* state)
 
 	int up = 0, left = 0;
 
-	if (state->Keys[SDLK_UP] || state->Keys[SDLK_w]) up++;
+	if (state->Keys[SDL_SCANCODE_UP] || state->Keys[SDL_SCANCODE_W]) up++;
 	if (Location.y > state->ScreenHeight - Location.h * 9 / 8) up++;
-	if (state->Keys[SDLK_DOWN] || state->Keys[SDLK_s]) up--;
+	if (state->Keys[SDL_SCANCODE_DOWN] || state->Keys[SDL_SCANCODE_S]) up--;
 	if (Location.y < Location.h / 8) up--;
 
-	if (state->Keys[SDLK_LEFT] || state->Keys[SDLK_a]) left++;
+	if (state->Keys[SDL_SCANCODE_LEFT] || state->Keys[SDL_SCANCODE_A]) left++;
 	if (Location.x > state->ScreenWidth - Location.w * 9 / 8) left++;
-	if (state->Keys[SDLK_RIGHT] || state->Keys[SDLK_d]) left--;
+	if (state->Keys[SDL_SCANCODE_RIGHT] || state->Keys[SDL_SCANCODE_D]) left--;
 	if (Location.x < Location.w / 8) left--;
 
-	auto firing = (state->Keys[SDLK_SPACE] || state->Keys[SDLK_RETURN]);
+	auto firing = (state->Keys[SDL_SCANCODE_SPACE] || state->Keys[SDL_SCANCODE_RETURN]);
 	for (unsigned int i = 0; i < Weapons.size(); i++)
 	{
 		if (firing && Weapons[i].RemainingReload == 0)
 		{
-			auto shot = new PlayerShot(Weapons[i].GraphicsStore, Weapons[i].L, Weapons[i].Ref, Weapons[i].InitialState);
+			auto shot = new PlayerShot(Weapons[i].ResourcesStore, Weapons[i].L, Weapons[i].Ref, Weapons[i].InitialState);
 
 			shot->Location.x = Location.x + Weapons[i].PositionX;
 			shot->Location.y = Location.y + Weapons[i].PositionY;
@@ -49,6 +49,12 @@ void Player::DoUpdate(GameState* state)
 			state->GameObjects.push_back(shot);
 
 			Weapons[i].RemainingReload = Weapons[i].Reload;
+
+			if (Weapons[i].FireSound != nullptr)
+			{
+				Mix_VolumeChunk(Weapons[i].FireSound, (MIX_MAX_VOLUME * Weapons[i].FireVolume) / 100);
+				Mix_PlayChannel(-1, Weapons[i].FireSound, 0);
+			}
 		}
 		else if (Weapons[i].RemainingReload > 0)
 		{
@@ -112,7 +118,7 @@ void Player::DoUpdate(GameState* state)
 	}
 }
 
-void Player::Initialise(Graphics * graphics, lua_State* L, luabridge::LuaRef ref)
+void Player::Initialise(Resources * resources, lua_State* L, luabridge::LuaRef ref)
 {
 	auto weapons = ref["weapons"];
 	Weapons.clear();
@@ -138,7 +144,18 @@ void Player::Initialise(Graphics * graphics, lua_State* L, luabridge::LuaRef ref
 		weapon.PositionY = GetInt(weaponRef, "position", 2, 0);
 		weapon.L = L;
 		weapon.RemainingReload = 0;
-		weapon.GraphicsStore = graphics;
+		weapon.ResourcesStore = resources;
+		auto fireSound = GetString(weaponRef, "fireSound", "");
+		if (fireSound != "")
+		{
+			weapon.FireSound = resources->LoadSound(fireSound);
+		}
+		else
+		{
+			weapon.FireSound = nullptr;
+		}
+		weapon.FireVolume = GetInt(weaponRef, "fireVolume", 100);
+
 
 		Weapons.push_back(weapon);
 	}

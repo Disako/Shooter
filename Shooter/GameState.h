@@ -10,7 +10,7 @@ public:
 	GameState();
 	~GameState();
 
-	Uint8* Keys;
+	const Uint8* Keys;
 	std::vector<GameObject*> GameObjects;
 
 	int ScreenWidth;

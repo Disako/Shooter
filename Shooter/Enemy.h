@@ -12,12 +12,12 @@ class Enemy :
 	public AutoMove
 {
 public:
-	Enemy(Graphics* graphics, lua_State* L, std::string type, std::string initialState);
+	Enemy(Resources* resources, lua_State* L, std::string type, std::string initialState);
 	~Enemy();
 	void Damage(unsigned int damage);
 private:
 	int HP;
-	Enemy(Graphics* graphics, lua_State* L, luabridge::LuaRef ref, std::string initialState);
-	void Initialise(Graphics* graphics, lua_State* L, luabridge::LuaRef ref);
+	Enemy(Resources* resources, lua_State* L, luabridge::LuaRef ref, std::string initialState);
+	void Initialise(Resources* resources, lua_State* L, luabridge::LuaRef ref);
 };
 

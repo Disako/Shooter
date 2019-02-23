@@ -7,20 +7,20 @@ extern "C" {
 }
 #include "Position.h"
 
-Enemy::Enemy(Graphics* graphics, lua_State* L, std::string type, std::string initialState) : Enemy(graphics, L, LuaLoadedObject::GetRef(L, type), initialState)
+Enemy::Enemy(Resources* resources, lua_State* L, std::string type, std::string initialState) : Enemy(resources, L, LuaLoadedObject::GetRef(L, type), initialState)
 {
 }
 
-Enemy::Enemy(Graphics* graphics, lua_State* L, luabridge::LuaRef ref, std::string initialState) : AutoMove(graphics, L, ref, initialState)
+Enemy::Enemy(Resources* resources, lua_State* L, luabridge::LuaRef ref, std::string initialState) : AutoMove(resources, L, ref, initialState)
 {
-	Initialise(graphics, L, ref);
+	Initialise(resources, L, ref);
 }
 
 Enemy::~Enemy()
 {
 }
 
-void Enemy::Initialise(Graphics * graphics, lua_State* L, luabridge::LuaRef ref)
+void Enemy::Initialise(Resources * resources, lua_State* L, luabridge::LuaRef ref)
 {
 	HP = GetInt(ref, "hp", 1);
 }

@@ -6,15 +6,15 @@ extern "C" {
 #include "..\LuaBridge\Source\LuaBridge\LuaBridge.h"
 #include "GameObject.h"
 #include "SDL.h"
-#include "Graphics.h"
+#include "Resources.h"
 #include "Position.h"
 #include <Tuple>
 #include <stdexcept>
 #include <sstream>
 
-GameObject::GameObject(Graphics* graphics, lua_State* L, luabridge::LuaRef ref)
+GameObject::GameObject(Resources* resources, lua_State* L, luabridge::LuaRef ref)
 {
-	Initialise(graphics, L, ref);
+	Initialise(resources, L, ref);
 }
 
 
@@ -105,11 +105,11 @@ SDL_Surface * GameObject::GetCurrentImage()
 	return Image;
 }
 
-void GameObject::Initialise(Graphics* graphics, lua_State* L, luabridge::LuaRef ref)
+void GameObject::Initialise(Resources* resources, lua_State* L, luabridge::LuaRef ref)
 {
 	SetCollision(ref["collision"]);
 
-	Image = graphics->LoadImage(GetString(ref, "image", "none"));
+	Image = resources->LoadImage(GetString(ref, "image", "none"));
 
 	Frame = GetInt(ref, "initialFrame", 0);
 

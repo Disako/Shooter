@@ -5,7 +5,7 @@ extern "C" {
 }
 #include "SDL.h"
 #include "GameState.h"
-#include "Graphics.h"
+#include "Resources.h"
 #include <vector>
 #include "..\LuaBridge\Source\LuaBridge\LuaBridge.h"
 #include "LuaLoadedObject.h"
@@ -24,7 +24,7 @@ public:
 	virtual void DoUpdate(GameState* state);
 	bool CheckCollision(GameObject* otherObject);
 protected:
-	GameObject(Graphics* graphics, lua_State* L, luabridge::LuaRef ref);
+	GameObject(Resources* resources, lua_State* L, luabridge::LuaRef ref);
 	virtual SDL_Surface* GetCurrentImage();
 	bool IsOutOfBounds(GameState* state);
 	int Frame;
@@ -33,6 +33,6 @@ private:
 	SDL_Surface* Image;
 	std::vector<SDL_Rect> Collision;
 	void SetCollision(luabridge::LuaRef ref);
-	void Initialise(Graphics* graphics, lua_State* L, luabridge::LuaRef ref);
+	void Initialise(Resources* resources, lua_State* L, luabridge::LuaRef ref);
 };
 
