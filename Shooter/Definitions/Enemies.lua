@@ -6,6 +6,14 @@ spinner = {
 	collision = {
 		{ 0, 0, 20, 20 }
 	},
+	spawns = {
+		{
+			identifier = "laser",
+			reload = 120,
+			initialState = "normal",
+			position = { 8, 10 }
+		}
+	},
 	movement = function(position)
 		if position.state == "right" then position.x = position.x + 1 else position.x = position.x - 1 end
 		position.y = position.y + 1
@@ -18,4 +26,16 @@ spinner = {
 	end,
 	explodeSound = "Sounds\\NFF-cannon.wav",
 	explodeVolume = 20
+}
+laser = {
+	hp = 1,
+	image = "images\\Laser.bmp",
+	collision = {
+		{ 0, 0, 4, 10 }
+	},
+	immune = true,
+	movement = function(position)
+		position.y = position.y + 5
+		return position
+	end
 }

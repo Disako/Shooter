@@ -19,7 +19,7 @@ void PlayerShot::DoUpdate(GameState * state)
 	for (unsigned int i = 0; i < state->GameObjects.size(); i++)
 	{
 		Enemy* enemy = dynamic_cast<Enemy*>(state->GameObjects[i]);
-		if (enemy)
+		if (enemy && !enemy->Immune)
 		{
 			if (CheckCollision(enemy))
 			{

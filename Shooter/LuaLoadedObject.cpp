@@ -37,6 +37,24 @@ luabridge::LuaRef LuaLoadedObject::GetRef(lua_State* L, std::string type)
 	return ref;
 }
 
+bool LuaLoadedObject::GetBool(luabridge::LuaRef ref, std::string key, bool defaultValue)
+{
+	if (ref[key].isNil())
+	{
+		return defaultValue;
+	}
+	else if (ref[key].isBool())
+	{
+		return ref[key];
+	}
+	else
+	{
+		std::stringstream error;
+		error << "Invalid value for " << key << ", expects bool";
+		throw std::runtime_error(error.str());
+	}
+}
+
 int LuaLoadedObject::GetInt(luabridge::LuaRef ref, std::string key, int defaultValue)
 {
 	if (ref[key].isNil())
