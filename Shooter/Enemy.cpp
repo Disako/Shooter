@@ -20,11 +20,6 @@ Enemy::~Enemy()
 {
 }
 
-SDL_Surface * Enemy::GetCurrentImage()
-{
-	return Image;
-}
-
 void Enemy::Initialise(Graphics * graphics, lua_State* L, luabridge::LuaRef ref)
 {
 	HP = GetInt(ref, "hp", 1);

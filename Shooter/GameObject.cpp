@@ -80,12 +80,6 @@ luabridge::LuaRef GameObject::GetRef(lua_State* L, std::string type)
 	return ref;
 }
 
-void GameObject::SetPosition(int x, int y)
-{
-	Location.x = x;
-	Location.y = y;
-}
-
 bool GameObject::CheckCollision(GameObject * otherObject)
 {
 	std::vector<SDL_Rect> collision1 = this->Collision;

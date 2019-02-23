@@ -20,11 +20,7 @@ public:
 
 	void Draw(SDL_Surface* screen);
 	virtual void DoUpdate(GameState* state);
-	bool IsOutOfBounds(GameState* state);
 	bool CheckCollision(GameObject* otherObject);
-	std::vector<SDL_Rect> Collision;
-	void SetPosition(int x, int y);
-	SDL_Surface* Image;
 protected:
 	GameObject(Graphics* graphics, lua_State* L, luabridge::LuaRef ref);
 	virtual SDL_Surface* GetCurrentImage();
@@ -34,7 +30,10 @@ protected:
 	std::string GetString(luabridge::LuaRef ref, std::string key, std::string defaultValue);
 	luabridge::LuaRef GetFunction(luabridge::LuaRef ref, std::string key);
 	static luabridge::LuaRef GetRef(lua_State* L, std::string type);
+	bool IsOutOfBounds(GameState* state);
 private:
+	SDL_Surface* Image;
+	std::vector<SDL_Rect> Collision;
 	void SetCollision(luabridge::LuaRef ref);
 	void Initialise(Graphics* graphics, lua_State* L, luabridge::LuaRef ref);
 };

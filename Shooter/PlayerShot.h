@@ -8,7 +8,6 @@ public:
 	~PlayerShot();
 	virtual void DoUpdate(GameState* state) override;
 
-protected:
 private:
 	void Initialise(Graphics* graphics, lua_State* L, luabridge::LuaRef ref);
 	int Damage;

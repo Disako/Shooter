@@ -14,12 +14,9 @@ class Enemy :
 public:
 	Enemy(Graphics* graphics, lua_State* L, std::string type, std::string initialState);
 	~Enemy();
-	int HP;
 	void Damage(unsigned int damage);
-	std::string State;
-protected:
-	SDL_Surface* GetCurrentImage() override;
 private:
+	int HP;
 	Enemy(Graphics* graphics, lua_State* L, luabridge::LuaRef ref, std::string initialState);
 	void Initialise(Graphics* graphics, lua_State* L, luabridge::LuaRef ref);
 };
