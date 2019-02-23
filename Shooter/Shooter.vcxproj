@@ -138,6 +138,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="Definitions\Enemies.lua" />
+    <None Include="Definitions\Levels.lua" />
     <None Include="Definitions\Player.lua" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
@@ -150,6 +151,8 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="AutoMove.cpp" />
+    <ClCompile Include="Level.cpp" />
+    <ClCompile Include="LuaLoadedObject.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerShot.cpp" />
   </ItemGroup>
@@ -162,6 +165,8 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="AutoMove.h" />
+    <ClInclude Include="Level.h" />
+    <ClInclude Include="LuaLoadedObject.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerShot.h" />
     <ClInclude Include="Position.h" />

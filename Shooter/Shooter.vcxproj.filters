@@ -25,6 +25,9 @@
     <None Include="Definitions\Player.lua">
       <Filter>Definitions</Filter>
     </None>
+    <None Include="Definitions\Levels.lua">
+      <Filter>Definitions</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="app.cpp">
@@ -49,6 +52,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AutoMove.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LuaLoadedObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -84,6 +93,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AutoMove.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaLoadedObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

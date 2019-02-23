@@ -7,7 +7,7 @@ extern "C" {
 }
 #include "Position.h"
 
-Enemy::Enemy(Graphics* graphics, lua_State* L, std::string type, std::string initialState) : Enemy(graphics, L, GameObject::GetRef(L, type), initialState)
+Enemy::Enemy(Graphics* graphics, lua_State* L, std::string type, std::string initialState) : Enemy(graphics, L, LuaLoadedObject::GetRef(L, type), initialState)
 {
 }
 
