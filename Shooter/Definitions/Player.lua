@@ -1,16 +1,16 @@
 player = {
 	image = "images\\Ship.bmp",
 	collision = {
-		{ 29, 20, 22, 37 },
-		{ 14, 46, 15, 22 },
-		{ 51, 46, 15, 22 }
+		{ 4, 9, 8, 24 },
+		{ 28, 9, 8, 24 },
+		{ 13, 16, 14, 18 }
 	},
 	weapons = {
 		{
 			identifier = "basicBullet",
 			reload = 10,
 			initialState = "normal",
-			position = { 37, 0 }
+			position = { 19, 15 }
 		}
 	}
 }
