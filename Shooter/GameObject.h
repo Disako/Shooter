@@ -13,7 +13,6 @@ extern "C" {
 class GameObject
 {
 public:
-	GameObject(Graphics* graphics, std::tuple<lua_State*, luabridge::LuaRef> luaRef);
 	virtual ~GameObject();
 
 	SDL_Rect Location;
@@ -27,6 +26,7 @@ public:
 	void SetPosition(int x, int y);
 	SDL_Surface* Image;
 protected:
+	GameObject(Graphics* graphics, std::tuple<lua_State*, luabridge::LuaRef> luaRef);
 	virtual SDL_Surface* GetCurrentImage();
 	static std::tuple<lua_State*, luabridge::LuaRef> SetupLua(std::string file, std::string type);
 	int GetInt(luabridge::LuaRef ref, std::string key, int defaultValue);
