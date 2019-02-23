@@ -150,6 +150,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="AutoMove.cpp" />
     <ClCompile Include="Level.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="Particle.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="AutoMove.h" />
     <ClInclude Include="Level.h" />

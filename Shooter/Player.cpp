@@ -11,7 +11,7 @@ Player::Player(Resources* resources, lua_State* L) : Player(resources, L, GameOb
 {
 }
 
-Player::Player(Resources* resources, lua_State* L, luabridge::LuaRef ref) : GameObject(resources, L, ref)
+Player::Player(Resources* resources, lua_State* L, luabridge::LuaRef ref) : GameObject(resources, ref)
 {
 	Initialise(resources, L, ref);
 }
@@ -41,7 +41,7 @@ void Player::DoUpdate(GameState* state)
 	{
 		if (firing && Weapons[i].RemainingReload == 0)
 		{
-			auto shot = new PlayerShot(Weapons[i].ResourcesStore, Weapons[i].L, Weapons[i].Ref, Weapons[i].InitialState);
+			auto shot = new PlayerShot(Weapons[i].ResourcesStore, Weapons[i].Ref, Weapons[i].InitialState);
 
 			shot->Location.x = Location.x + Weapons[i].PositionX;
 			shot->Location.y = Location.y + Weapons[i].PositionY;
@@ -142,7 +142,6 @@ void Player::Initialise(Resources * resources, lua_State* L, luabridge::LuaRef r
 		weapon.InitialState = GetString(weaponRef, "initialState", "none");
 		weapon.PositionX = GetInt(weaponRef, "position", 1, 0);
 		weapon.PositionY = GetInt(weaponRef, "position", 2, 0);
-		weapon.L = L;
 		weapon.RemainingReload = 0;
 		weapon.ResourcesStore = resources;
 		auto fireSound = GetString(weaponRef, "fireSound", "");

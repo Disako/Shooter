@@ -2,9 +2,9 @@
 #include "Enemy.h"
 #include <tuple>
 
-PlayerShot::PlayerShot(Resources* resources, lua_State* L, luabridge::LuaRef ref, std::string initialState) : AutoMove(resources, L, ref, initialState)
+PlayerShot::PlayerShot(Resources* resources, luabridge::LuaRef ref, std::string initialState) : AutoMove(resources, ref, initialState)
 {
-	Initialise(resources, L, ref);
+	Initialise(resources, ref);
 }
 
 
@@ -30,7 +30,7 @@ void PlayerShot::DoUpdate(GameState * state)
 	}
 }
 
-void PlayerShot::Initialise(Resources * resources, lua_State* L, luabridge::LuaRef ref)
+void PlayerShot::Initialise(Resources * resources, luabridge::LuaRef ref)
 {
 	Damage = GetInt(ref, "damage", 1);
 }

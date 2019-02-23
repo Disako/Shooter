@@ -11,10 +11,11 @@ extern "C" {
 #include <Tuple>
 #include <stdexcept>
 #include <sstream>
+#include "Particle.h"
 
-GameObject::GameObject(Resources* resources, lua_State* L, luabridge::LuaRef ref)
+GameObject::GameObject(Resources* resources, luabridge::LuaRef ref)
 {
-	Initialise(resources, L, ref);
+	Initialise(resources, ref);
 }
 
 
@@ -105,16 +106,41 @@ SDL_Surface * GameObject::GetCurrentImage()
 	return Image;
 }
 
-void GameObject::Destroy(GameState* state)
+double GameObject::Rad(int degrees)
 {
-	if (ExplodeSound && !IsOutOfBounds(state))
+	return (M_PI * degrees) / 180;
+}
+
+int GameObject::Random(int min, int max)
+{
+	if (min >= max) return min;
+	return min + rand() % (max - min);
+}
+
+void GameObject::Destroy(GameState* state, Resources* resources)
+{
+	if (!IsOutOfBounds(state))
 	{
-		Mix_VolumeChunk(ExplodeSound, (MIX_MAX_VOLUME * ExplodeVolume) / 100);
-		Mix_PlayChannel(-1, ExplodeSound, 0);
+		if (ExplodeSound)
+		{
+			Mix_VolumeChunk(ExplodeSound, (MIX_MAX_VOLUME * ExplodeVolume) / 100);
+			Mix_PlayChannel(-1, ExplodeSound, 0);
+		}
+
+		for (unsigned int i = 0; i < ExplodeParticles.size(); i++)
+		{
+			auto particleRef = ExplodeParticles[i];
+			auto particlesToCreate = Random(GetInt(particleRef, "count", 1, 1), GetInt(particleRef, "count", 2, 1));
+			for (int j = 0; j < particlesToCreate; j++)
+			{
+				auto particle = new Particle(resources, particleRef, Location.x, Location.y);
+				state->GameObjects.push_back(particle);
+			}
+		}
 	}
 }
 
-void GameObject::Initialise(Resources* resources, lua_State* L, luabridge::LuaRef ref)
+void GameObject::Initialise(Resources* resources, luabridge::LuaRef ref)
 {
 	SetCollision(ref["collision"]);
 
@@ -177,6 +203,25 @@ void GameObject::Initialise(Resources* resources, lua_State* L, luabridge::LuaRe
 			x = 0;
 			y += frameHeight;
 		}
+	}
+
+	SetupExplodeParticles(ref["explodeParticles"]);
+}
+
+void GameObject::SetupExplodeParticles(luabridge::LuaRef ref)
+{
+	ExplodeParticles.clear();
+	if (ref.isNil())
+	{
+		return;
+	}
+	if (!ref.isTable())
+	{
+		std::runtime_error("Invalid value for explode particles, expects table");
+	}
+	for (int i = 1; i <= ref.length(); i++)
+	{
+		ExplodeParticles.push_back(ref[i]);
 	}
 }
 

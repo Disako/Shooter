@@ -16,7 +16,18 @@ player = {
 		}
 	},
 	explodeSound = "Sounds\\NFF-cannon.wav",
-	explodeVolume = 20
+	explodeVolume = 20,
+	explodeParticles = {
+		{
+			image = "images\\explode.bmp",
+			frameSize = { 20, 20 },
+			count = { 6, 10 },
+			center = { 10, 10 },
+			positionRadius = { 0, 17 },
+			ttl = { 30, 60 },
+			speed = { 0, 2 }
+		}
+	}
 }
 basicBullet = {
 	image = "images\\BasicBullet.bmp",

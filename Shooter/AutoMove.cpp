@@ -2,11 +2,11 @@
 #include "Position.h"
 
 
-AutoMove::AutoMove(Resources* resources, lua_State* L, luabridge::LuaRef ref, std::string initialState) : GameObject(resources, L, ref)
+AutoMove::AutoMove(Resources* resources, luabridge::LuaRef ref, std::string initialState) : GameObject(resources, ref)
 {
 	State = initialState;
 
-	Initialise(resources, L, ref);
+	Initialise(resources, ref);
 }
 
 AutoMove::~AutoMove()
@@ -41,7 +41,7 @@ void AutoMove::DoUpdate(GameState * state)
 	}
 }
 
-void AutoMove::Initialise(Resources * resources, lua_State* L, luabridge::LuaRef ref)
+void AutoMove::Initialise(Resources * resources, luabridge::LuaRef ref)
 {
 	Movement = GetFunction(ref, "movement");
 	Count = 0;

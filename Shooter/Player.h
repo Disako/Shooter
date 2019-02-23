@@ -9,7 +9,6 @@ struct Weapon
 	int Reload;
 	std::string InitialState;
 	int PositionX, PositionY;
-	lua_State* L;
 	int RemainingReload = 0;
 	Resources* ResourcesStore;
 	Mix_Chunk* FireSound;

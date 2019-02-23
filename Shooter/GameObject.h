@@ -23,19 +23,23 @@ public:
 	void Draw(SDL_Surface* screen);
 	virtual void DoUpdate(GameState* state);
 	bool CheckCollision(GameObject* otherObject);
-	void Destroy(GameState* state);
+	void Destroy(GameState* state, Resources* resources);
 protected:
-	GameObject(Resources* resources, lua_State* L, luabridge::LuaRef ref);
+	GameObject(Resources* resources, luabridge::LuaRef ref);
 	virtual SDL_Surface* GetCurrentImage();
 	bool IsOutOfBounds(GameState* state);
 	int Frame;
 	std::vector<SDL_Rect> Frames;
+	double Rad(int degrees);
+	int Random(int min, int max);
 private:
 	SDL_Surface* Image;
 	std::vector<SDL_Rect> Collision;
 	void SetCollision(luabridge::LuaRef ref);
-	void Initialise(Resources* resources, lua_State* L, luabridge::LuaRef ref);
+	void Initialise(Resources* resources, luabridge::LuaRef ref);
 	Mix_Chunk* ExplodeSound;
 	int ExplodeVolume;
+	std::vector<luabridge::LuaRef> ExplodeParticles;
+	void SetupExplodeParticles(luabridge::LuaRef ref);
 };
 

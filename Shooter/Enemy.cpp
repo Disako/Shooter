@@ -11,7 +11,7 @@ Enemy::Enemy(Resources* resources, lua_State* L, std::string type, std::string i
 {
 }
 
-Enemy::Enemy(Resources* resources, lua_State* L, luabridge::LuaRef ref, std::string initialState) : AutoMove(resources, L, ref, initialState)
+Enemy::Enemy(Resources* resources, lua_State* L, luabridge::LuaRef ref, std::string initialState) : AutoMove(resources, ref, initialState)
 {
 	Initialise(resources, L, ref);
 }

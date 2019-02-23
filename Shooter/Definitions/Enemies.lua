@@ -24,6 +24,17 @@ spinner = {
 		end
 		return position
 	end,
+	explodeParticles = {
+		{
+			image = "images\\explode.bmp",
+			frameSize = { 20, 20 },
+			count = { 3, 5 },
+			center = { 0, 0 },
+			positionRadius = { 0, 7 },
+			ttl = { 30, 60 },
+			speed = { 0, 2 }
+		}
+	},
 	explodeSound = "Sounds\\NFF-cannon.wav",
 	explodeVolume = 20
 }

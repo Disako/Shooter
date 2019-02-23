@@ -4,12 +4,12 @@ class PlayerShot :
 	public AutoMove
 {
 public:
-	PlayerShot(Resources* resources, lua_State* L, luabridge::LuaRef ref, std::string initialState);
+	PlayerShot(Resources* resources, luabridge::LuaRef ref, std::string initialState);
 	~PlayerShot();
 	virtual void DoUpdate(GameState* state) override;
 
 private:
-	void Initialise(Resources* resources, lua_State* L, luabridge::LuaRef ref);
+	void Initialise(Resources* resources, luabridge::LuaRef ref);
 	int Damage;
 };
 
