@@ -105,9 +105,9 @@ SDL_Surface * GameObject::GetCurrentImage()
 	return Image;
 }
 
-void GameObject::Destroy()
+void GameObject::Destroy(GameState* state)
 {
-	if (ExplodeSound)
+	if (ExplodeSound && !IsOutOfBounds(state))
 	{
 		Mix_VolumeChunk(ExplodeSound, (MIX_MAX_VOLUME * ExplodeVolume) / 100);
 		Mix_PlayChannel(-1, ExplodeSound, 0);

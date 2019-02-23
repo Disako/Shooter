@@ -130,7 +130,7 @@ Level* DoUpdate(GameState* state, Resources* resources, Level* level)
 
 	for (int i = indexesToDelete.size() - 1; i >= 0; i--)
 	{
-		state->GameObjects[indexesToDelete[i]]->Destroy();
+		state->GameObjects[indexesToDelete[i]]->Destroy(state);
 		delete state->GameObjects[indexesToDelete[i]];
 		state->GameObjects.erase(state->GameObjects.begin() + indexesToDelete[i]);
 	}

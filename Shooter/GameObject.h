@@ -23,7 +23,7 @@ public:
 	void Draw(SDL_Surface* screen);
 	virtual void DoUpdate(GameState* state);
 	bool CheckCollision(GameObject* otherObject);
-	void Destroy();
+	void Destroy(GameState* state);
 protected:
 	GameObject(Resources* resources, lua_State* L, luabridge::LuaRef ref);
 	virtual SDL_Surface* GetCurrentImage();
