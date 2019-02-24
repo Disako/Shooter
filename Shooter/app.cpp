@@ -12,7 +12,7 @@
 
 void CreateShip(GameState* state, Resources* resources, lua_State* L);
 Level* DoUpdate(GameState* state, Resources* resources, Level* level);
-void DrawScreen(SDL_Surface* screen, GameState* state, Number* number);
+void DrawScreen(SDL_Surface* screen, GameState* state, Number* number, Resources* resources);
 lua_State* SetupLua();
 
 int main(int argc, char* args[])
@@ -48,7 +48,7 @@ int main(int argc, char* args[])
 		SDL_PollEvent(&event);
 		state->Keys = SDL_GetKeyboardState(NULL);
 		level = DoUpdate(state, resources, level);
-		DrawScreen(screen, state, number);
+		DrawScreen(screen, state, number, resources);
 
 		Uint32 currentTicks;
 
@@ -141,7 +141,7 @@ Level* DoUpdate(GameState* state, Resources* resources, Level* level)
 	return level;
 }
 
-void DrawScreen(SDL_Surface* screen, GameState* state, Number* number)
+void DrawScreen(SDL_Surface* screen, GameState* state, Number* number, Resources* resources)
 {
 	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
 
@@ -150,5 +150,18 @@ void DrawScreen(SDL_Surface* screen, GameState* state, Number* number)
 		state->GameObjects[i]->Draw(screen);
 	}
 
-	number->Draw(screen, state->Score, state->ScreenWidth - 2, 2, Alignment::Right);
+	if (state->GameOver)
+	{
+		auto gameOver = resources->LoadImage("Images\\Gameover.bmp");
+		auto location = SDL_Rect(gameOver->clip_rect);
+		location.x = state->ScreenWidth / 2 - location.w / 2;
+		location.y = state->ScreenHeight / 2 - location.h / 2;
+
+		SDL_BlitSurface(gameOver, NULL, screen, &location);
+		number->Draw(screen, state->Score, state->ScreenWidth / 2, location.y + location.h + 5, Alignment::Center);
+	}
+	else
+	{
+		number->Draw(screen, state->Score, state->ScreenWidth - 2, 2, Alignment::Right);
+	}
 }
