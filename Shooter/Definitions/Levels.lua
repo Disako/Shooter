@@ -260,8 +260,8 @@ level1={
 	{
 		action = "upgrade",
 		upgrader = "upgrader",
-		location = { 110, 480 },
-		state = "left"
+		location = { 510, 480 },
+		state = "right"
 	},
 	{
 		action = "wait",

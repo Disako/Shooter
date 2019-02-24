@@ -112,7 +112,7 @@ missile = {
 	image = "images\\Missile.bmp",
 	collision = { { 0, 0, 8, 10 } },
 	frameSize = { 8, 10 },
-	damage = 5,
+	damage = 3,
 	movement = function(position)
 		if position.count < 120 then
 			position.count = position.count + 1
@@ -140,8 +140,12 @@ upgrader = {
 		if position.count % 10 == 0 then
 			position.frame = position.frame + 1
 		end
-		position.y = 480 - math.floor(math.sin(math.rad(position.count / 3)) * 150)
-		position.x = 310 - math.floor(math.cos(math.rad(position.count / 3)) * 200)		
+		if position.state == "left" then
+			position.x = 310 - math.floor(math.cos(math.rad(position.count / 3)) * 200)
+		else
+			position.x = 310 + math.floor(math.cos(math.rad(position.count / 3)) * 200)
+		end
+		position.y = 480 - math.floor(math.sin(math.rad(position.count / 3)) * 150)	
 		return position
 	end
 }
