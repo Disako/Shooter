@@ -106,8 +106,8 @@ void CreateShip(GameState* state, Resources* resources, lua_State* L)
 {
 	Player* ship = new Player(resources, L);
 
-	ship->Location.x = 100;
-	ship->Location.y = 100;
+	ship->Location.x = state->ScreenWidth / 2 - ship->Location.w / 2;
+	ship->Location.y = state->ScreenHeight - ship->Location.h - 20;
 
 	state->GameObjects.push_back(ship);
 }
