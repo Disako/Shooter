@@ -56,7 +56,7 @@ void Number::Draw(SDL_Surface * screen, unsigned int number, int x, int y, Align
 		position.w = Frames[digit].w;
 		position.h = Frames[digit].h;
 
-		SDL_BlitSurface(Image, new SDL_Rect(Frames[digit]), screen, &position);
+		SDL_BlitSurface(Image, &SDL_Rect(Frames[digit]), screen, &position);
 
 		number -= multiplier * digit;
 		x += Frames[digit].w;

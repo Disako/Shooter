@@ -21,11 +21,18 @@ GameObject::GameObject(Resources* resources, luabridge::LuaRef ref)
 
 GameObject::~GameObject()
 {
+	Frames.clear();
+	Collision.clear();
 }
 
 void GameObject::Draw(SDL_Surface * screen)
 {
-	SDL_BlitSurface(GetCurrentImage(), new SDL_Rect(Frames[Frame]), screen, new SDL_Rect(Location));
+	auto frameRect = new SDL_Rect(Frames[Frame]);
+	auto positionRect = new SDL_Rect(Location);
+	SDL_BlitSurface(GetCurrentImage(), frameRect, screen, positionRect);
+
+	delete frameRect;
+	delete positionRect;
 }
 
 void GameObject::SetCollision(luabridge::LuaRef ref)

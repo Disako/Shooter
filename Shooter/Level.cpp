@@ -61,6 +61,9 @@ Level* Level::DoUpdate(GameState* state, Resources* resources)
 		else if (action == "level")
 		{
 			auto nextLevel = new Level(L, GetString(Events[Index], "level", "blank"));
+
+			delete this;
+
 			return nextLevel->DoUpdate(state, resources);
 		}
 		else if (action == "music")
