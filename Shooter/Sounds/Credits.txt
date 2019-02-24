@@ -2,3 +2,4 @@ https://www.noiseforfun.com
 - NFF-laser.wav: https://www.noiseforfun.com/2012-sound-effects/laser/
 - NFF-cannon.wav: https://www.noiseforfun.com/2012-sound-effects/cannon/
 - NFF-leap-out-02.wav: https://www.noiseforfun.com/2013-sound-effects/leap-out-02/
+- NFF-magic-whip.wav: https://www.noiseforfun.com/2013-sound-effects/magic-whip/

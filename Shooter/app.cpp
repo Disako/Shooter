@@ -182,6 +182,13 @@ void DrawScreen(SDL_Surface* screen, GameState* state, Number* number, Resources
 	{
 		number->Draw(screen, state->Score, state->ScreenWidth - 2, 2, Alignment::Right);
 		if (state->ScoreMultiplier > 1)
-			number->Draw(screen, state->ScoreMultiplier, state->ScreenWidth - 2, 22, Alignment::Right);
+		{
+			auto x = resources->LoadImage("Images\\x.bmp");
+			number->Draw(screen, state->ScoreMultiplier, state->ScreenWidth - 12, 22, Alignment::Right);
+			SDL_Rect location;
+			location.x = state->ScreenWidth - 12;
+			location.y = 22;
+			SDL_BlitSurface(x, NULL, screen, &location);
+		}
 	}
 }
