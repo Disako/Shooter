@@ -13,3 +13,4 @@ How to play:
 - Use arrow keys or WASD to move
 - Hold enter or space to fire
 - Press escape to exit
+- Press r to restart

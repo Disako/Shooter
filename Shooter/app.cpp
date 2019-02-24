@@ -19,14 +19,14 @@ int main(int argc, char* args[])
 {
 	SDL_Event event;
 
-	GameState* state = new GameState();
-
-	state->ScreenWidth = 640;
-	state->ScreenHeight = 480;
+	
 
 	SDL_Init(SDL_INIT_EVERYTHING);
 	
-	auto window = SDL_CreateWindow("Shooter", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, state->ScreenWidth, state->ScreenHeight, SDL_WINDOW_SHOWN);
+	const int screenWidth = 640;
+	const int screenHeight = 480;
+
+	auto window = SDL_CreateWindow("Shooter", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight, SDL_WINDOW_SHOWN);
 	SDL_Surface* screen = SDL_GetWindowSurface(window);
 
 	Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096);
@@ -39,28 +39,43 @@ int main(int argc, char* args[])
 
 	Uint32 lastRefreshTicks = SDL_GetTicks();
 
-	auto level = new Level(L, "startUp");
+	bool quit = false;
 
 	do
 	{
-		SDL_PollEvent(&event);
-		state->Keys = SDL_GetKeyboardState(NULL);
-		level = DoUpdate(state, resources, level, L);
-		DrawScreen(screen, state, number, resources);
+		GameState* state = new GameState();
 
-		Uint32 currentTicks;
+		state->ScreenWidth = screenWidth;
+		state->ScreenHeight = screenHeight;
+		auto level = new Level(L, "startUp");
+		bool restart = false;
 
-		currentTicks = SDL_GetTicks();
-		if(lastRefreshTicks + 17 > currentTicks)
-			SDL_Delay(lastRefreshTicks + 17 - currentTicks);
+		do
+		{
+			SDL_PollEvent(&event);
+			state->Keys = SDL_GetKeyboardState(NULL);
+			level = DoUpdate(state, resources, level, L);
+			DrawScreen(screen, state, number, resources);
 
-		SDL_UpdateWindowSurface(window);
+			Uint32 currentTicks;
 
-		lastRefreshTicks = SDL_GetTicks();
+			currentTicks = SDL_GetTicks();
+			if (lastRefreshTicks + 17 > currentTicks)
+				SDL_Delay(lastRefreshTicks + 17 - currentTicks);
 
-	} while (!(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE || event.type == SDL_QUIT));
+			SDL_UpdateWindowSurface(window);
 
-	delete state;
+			lastRefreshTicks = SDL_GetTicks();
+
+			quit = event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE || event.type == SDL_QUIT;
+			restart = event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_r;
+
+		} while (!(quit || restart));
+
+		delete state;
+
+	} while (!quit);
+
 	delete resources;
 
 	Mix_CloseAudio();
