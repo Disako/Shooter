@@ -50,6 +50,11 @@ level1={
 		frames = 60
 	},
 	{
+		action = "spawn",
+		enemy = "stomper",
+		location = { 290, -40 }
+	},
+	{
 		action = "upgrade",
 		upgrader = "upgrader",
 		location = { 110, 480 },
