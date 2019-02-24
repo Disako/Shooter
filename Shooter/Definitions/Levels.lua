@@ -14,13 +14,13 @@ startUp={
 		action = "backgroundObj",
 		type = "smallStar",
 		probability = 10,
-		fill = 480 * 4
+		fill = true
 	},
 	{
 		action = "backgroundObj",
 		type = "bigStar",
 		probability = 5,
-		fill = 480 * 2
+		fill = true
 	},
 	{
 		action = "level",

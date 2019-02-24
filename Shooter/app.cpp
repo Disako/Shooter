@@ -139,12 +139,12 @@ Level* DoUpdate(GameState* state, Resources* resources, Level* level, lua_State*
 		auto prob = spawn.second.probability;
 		while (prob >= 100)
 		{
-			state->BackgroundObjects.push_back(new BackgroundObject(resources, L, spawn.first, spawn.second.initialState));
+			state->BackgroundObjects.push_back(new BackgroundObject(resources, L, spawn.first, spawn.second.initialState, false));
 			prob -= 100;
 		}
 		if (rand() % 100 < prob)
 		{
-			state->BackgroundObjects.push_back(new BackgroundObject(resources, L, spawn.first, spawn.second.initialState));
+			state->BackgroundObjects.push_back(new BackgroundObject(resources, L, spawn.first, spawn.second.initialState, false));
 		}
 	}
 

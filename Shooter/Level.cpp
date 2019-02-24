@@ -92,31 +92,19 @@ Level* Level::DoUpdate(GameState* state, Resources* resources)
 			spawn.initialState = GetString(Events[Index], "state", "none");
 			state->BackgroundSpawns[type] = spawn;
 
-			if (spawn.probability > 0)
+			if (spawn.probability > 0 && GetBool(Events[Index], "fill", false))
 			{
-				auto fill = GetInt(Events[Index], "fill", 0);
-				for(int i = 0; i < fill; i++)
+				auto prob = spawn.probability * GetInt(GetRef(L, type), "fillMultiplier", 1);
+				while (prob >= 100)
 				{
-					auto prob = spawn.probability;
-					while (prob >= 100)
-					{
-						auto obj = new BackgroundObject(resources, L, type, spawn.initialState);
-						state->BackgroundObjects.push_back(obj);
-						prob -= 100;
-						for (int j = i; j < fill; j++)
-						{
-							obj->DoUpdate(state);
-						}
-					}
-					if (rand() % 100 < prob)
-					{
-						auto obj = new BackgroundObject(resources, L, type, spawn.initialState);
-						state->BackgroundObjects.push_back(obj);
-						for (int j = i; j < fill; j++)
-						{
-							obj->DoUpdate(state);
-						}
-					}
+					auto obj = new BackgroundObject(resources, L, type, spawn.initialState, true);
+					state->BackgroundObjects.push_back(obj);
+					prob -= 100;
+				}
+				if (rand() % 100 < prob)
+				{
+					auto obj = new BackgroundObject(resources, L, type, spawn.initialState, true);
+					state->BackgroundObjects.push_back(obj);
 				}
 			}
 		}
