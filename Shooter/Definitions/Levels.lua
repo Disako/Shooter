@@ -46,6 +46,11 @@ level1={
 		state = "left"
 	},
 	{
+		action = "spawn",
+		enemy = "heavy",
+		location = { 40, -40 }
+	},
+	{
 		action = "wait",
 		frames = 60
 	},

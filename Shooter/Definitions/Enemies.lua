@@ -79,6 +79,76 @@ stomper = {
 	explodeSound = "Sounds\\NFF-cannon.wav",
 	explodeVolume = 20,
 }
+heavy = {
+	hp = 5,
+	image = "images\\Heavy.bmp",
+	collision = {
+		{ 0, 14, 40, 17 },
+		{ 17, 0, 6, 14 },
+		{ 15, 31, 10, 9 }
+	},
+	score = 250,
+	movement = function(position)
+		if position.y < 200 then
+			position.y = position.y + 1
+			if position.y == 200 then
+				if position.x < 300 then
+					position.state = "right"
+					position.count = 600 - position.x
+				else
+					position.state = "left"
+					position.count = position.x - 600
+				end
+			end
+		elseif position.state == "left" then
+			position.x = position.x - 1
+			if position.x <= position.count then
+				position.state = "down"
+			end
+		elseif position.state == "right" then
+			position.x = position.x + 1
+			if position.x >= position.count then
+				position.state = "down"
+			end
+		else
+			position.y = position.y + 1
+		end
+		return position
+	end,
+	explodeParticles = {
+		{
+			image = "images\\explode.bmp",
+			frameSize = { 20, 20 },
+			count = { 8, 16 },
+			center = { 10, 10 },
+			positionRadius = { 0, 17 },
+			ttl = { 30, 60 },
+			speed = { 0, 2 }
+		}
+	},
+	explodeSound = "Sounds\\NFF-cannon.wav",
+	explodeVolume = 20,
+	spawns = {
+		{
+			identifier = "laser",
+			reload = 200,
+			initialState = "normal",
+			position = { 1, 30 }
+		},
+		{
+			identifier = "laser",
+			reload = 200,
+			initialState = "normal",
+			position = { 18, 16 }
+		},
+		{
+			identifier = "laser",
+			reload = 200,
+			initialState = "normal",
+			position = { 35, 30 }
+		}
+	},
+}
 laser = {
 	hp = 1,
 	image = "images\\Laser.bmp",
