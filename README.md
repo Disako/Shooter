@@ -7,3 +7,9 @@ Getting this to run:
 - Visual studio should automatically install the required NuGet packages
 
 After this it should build happily
+
+How to play:
+
+- Use arrow keys or WASD to move
+- Hold enter or space to fire
+- Press escape to exit
