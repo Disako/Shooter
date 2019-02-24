@@ -47,6 +47,31 @@ player = {
 			position = { 34, 15 },
 			minLevel = 2,
 			maxLevel = 4
+		},
+		{
+			identifier = "missile",
+			reload = 50,
+			position = { 2, 20 },
+			minLevel = 3,
+			maxLevel = 4,
+			fireSound = "Sounds\\NFF-leap-out-02.wav"
+		},
+		{
+			identifier = "missile",
+			reload = 50,
+			position = { 30, 20 },
+			minLevel = 3,
+			maxLevel = 4
+		},
+		{
+			identifier = "obliterate",
+			reload = 1,
+			position = { 18, -465 },
+			minLevel = 4,
+			maxLevel = 4,
+			fireSound = "Sounds\\NFF-magic-whip.wav",
+			fireVolume = 50,
+			soundFrequency = 20
 		}
 	},
 	maxLevel = 4,
@@ -80,7 +105,30 @@ basicBullet = {
 			position.y = position.y - 8
 			position.x = position.x + 6
 		end
-		return position;
+		return position
+	end
+}
+missile = {
+	image = "images\\Missile.bmp",
+	collision = { { 0, 0, 8, 10 } },
+	frameSize = { 8, 10 },
+	damage = 5,
+	movement = function(position)
+		if position.count < 120 then
+			position.count = position.count + 1
+		end
+		position.y = position.y - math.floor(position.count / 24) - 1
+		position.frame = position.frame + 1
+		return position
+	end
+}
+obliterate = {
+	image = "images\\obliterate.bmp",
+	collision = { { 0, 0, 4, 480 } },
+	damage = 1,
+	movement = function(position)
+		if position.count == 0 then position.count = 1 else position.x = 1000 end
+		return position
 	end
 }
 upgrader = {

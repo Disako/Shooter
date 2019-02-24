@@ -25,6 +25,7 @@ public:
 	int ScreenWidth;
 	int ScreenHeight;
 	unsigned int Score = 0;
+	unsigned int ScoreMultiplier = 1;
 	bool GameOver = false;
 };
 

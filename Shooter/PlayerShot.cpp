@@ -27,7 +27,7 @@ void PlayerShot::DoUpdate(GameState * state)
 				Destroyed = true;
 				if (enemy->Destroyed)
 				{
-					state->Score += enemy->Score;
+					state->Score += enemy->Score * state->ScoreMultiplier;
 				}
 			}
 		}

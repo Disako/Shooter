@@ -181,5 +181,7 @@ void DrawScreen(SDL_Surface* screen, GameState* state, Number* number, Resources
 	else
 	{
 		number->Draw(screen, state->Score, state->ScreenWidth - 2, 2, Alignment::Right);
+		if (state->ScoreMultiplier > 1)
+			number->Draw(screen, state->ScoreMultiplier, state->ScreenWidth - 2, 22, Alignment::Right);
 	}
 }

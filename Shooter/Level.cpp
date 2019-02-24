@@ -42,7 +42,7 @@ Level* Level::DoUpdate(GameState* state, Resources* resources)
 			auto player = new Player(resources, L, GetString(Events[Index], "player", "None"));
 			player->Location.x = GetInt(Events[Index], "location", 1, 0);
 			player->Location.y = GetInt(Events[Index], "location", 2, 0);
-			player->SetLevel(GetInt(Events[Index], "level", 1), true);
+			player->SetLevel(GetInt(Events[Index], "level", 1), true, state);
 
 			state->GameObjects.push_back(player);
 		}

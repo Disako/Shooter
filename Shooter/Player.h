@@ -12,6 +12,8 @@ struct Weapon
 	int RemainingReload = 0;
 	Mix_Chunk* FireSound;
 	int FireVolume;
+	int SoundFrequency;
+	int LastSound = 0;
 	int MinLevel;
 	int MaxLevel;
 };
@@ -23,7 +25,7 @@ public:
 	Player(Resources* resources, lua_State* L, std::string playerType);
 	~Player() override;
 	void DoUpdate(GameState* state) override;
-	void SetLevel(int level, bool setFrame);
+	void SetLevel(int level, bool setFrame, GameState* state);
 private:
 	Player(Resources* resources, lua_State* L, luabridge::LuaRef ref);
 	void Initialise(Resources* resources, lua_State* L, luabridge::LuaRef ref);
@@ -35,5 +37,6 @@ private:
 	int Level;
 	int MaxLevel;
 	luabridge::LuaRef CollisionRefs = nullptr;
+	int LastChange;
 };
 

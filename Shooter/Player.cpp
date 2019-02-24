@@ -28,9 +28,15 @@ void Player::DoUpdate(GameState* state)
 		Invincibility--;
 	}
 
+	if (LastChange > 0) LastChange--;
+
 	if (Frame < (Level - 1) * 4)
 	{
-		Frame++;
+		if (LastChange == 0)
+		{
+			Frame++;
+			LastChange = 6;
+		}
 	}
 	else
 	{
@@ -50,32 +56,6 @@ void Player::DoUpdate(GameState* state)
 	if (Location.x > state->ScreenWidth - Location.w * 9 / 8) left++;
 	if (state->Keys[SDL_SCANCODE_RIGHT] || state->Keys[SDL_SCANCODE_D]) left--;
 	if (Location.x < Location.w / 8) left--;
-
-	auto firing = (state->Keys[SDL_SCANCODE_SPACE] || state->Keys[SDL_SCANCODE_RETURN]);
-	for (unsigned int i = 0; i < Weapons.size(); i++)
-	{
-		if (firing && Weapons[i].RemainingReload == 0 && Level >= Weapons[i].MinLevel && Level <= Weapons[i].MaxLevel)
-		{
-			auto shot = new PlayerShot(ResourcesStore, Weapons[i].Ref, Weapons[i].InitialState);
-
-			shot->Location.x = Location.x + Weapons[i].PositionX;
-			shot->Location.y = Location.y + Weapons[i].PositionY;
-
-			state->GameObjects.push_back(shot);
-
-			Weapons[i].RemainingReload = Weapons[i].Reload;
-
-			if (Weapons[i].FireSound != nullptr)
-			{
-				Mix_VolumeChunk(Weapons[i].FireSound, (MIX_MAX_VOLUME * Weapons[i].FireVolume) / 100);
-				Mix_PlayChannel(-1, Weapons[i].FireSound, 0);
-			}
-		}
-		else if (Weapons[i].RemainingReload > 0)
-		{
-			Weapons[i].RemainingReload--;
-		}
-	}
 
 	if (up > 0)
 	{
@@ -119,6 +99,35 @@ void Player::DoUpdate(GameState* state)
 	Location.x += Speed.x;
 	Location.y += Speed.y;
 
+	auto firing = (state->Keys[SDL_SCANCODE_SPACE] || state->Keys[SDL_SCANCODE_RETURN]);
+	for (unsigned int i = 0; i < Weapons.size(); i++)
+	{
+		if (Weapons[i].LastSound > 0) Weapons[i].LastSound--;
+
+		if (firing && Weapons[i].RemainingReload == 0 && Level >= Weapons[i].MinLevel && Level <= Weapons[i].MaxLevel)
+		{
+			auto shot = new PlayerShot(ResourcesStore, Weapons[i].Ref, Weapons[i].InitialState);
+
+			shot->Location.x = Location.x + Weapons[i].PositionX;
+			shot->Location.y = Location.y + Weapons[i].PositionY;
+
+			state->GameObjects.push_back(shot);
+
+			Weapons[i].RemainingReload = Weapons[i].Reload;
+
+			if (Weapons[i].FireSound != nullptr && Weapons[i].LastSound == 0)
+			{
+				Mix_VolumeChunk(Weapons[i].FireSound, (MIX_MAX_VOLUME * Weapons[i].FireVolume) / 100);
+				Mix_PlayChannel(-1, Weapons[i].FireSound, 0);
+				Weapons[i].LastSound = Weapons[i].SoundFrequency;
+			}
+		}
+		else if (Weapons[i].RemainingReload > 0)
+		{
+			Weapons[i].RemainingReload--;
+		}
+	}
+
 	for (unsigned int i = 0; i < state->GameObjects.size(); i++)
 	{
 		Enemy* enemy = dynamic_cast<Enemy*>(state->GameObjects[i]);
@@ -135,8 +144,9 @@ void Player::DoUpdate(GameState* state)
 				else
 				{
 					Destroy(state, ResourcesStore);
-					SetLevel(Level - 1, true);
+					SetLevel(Level - 1, true, state);
 					Invincibility = 60;
+					state->ScoreMultiplier = 1;
 				}
 			}
 		}
@@ -145,21 +155,26 @@ void Player::DoUpdate(GameState* state)
 		{
 			if (CheckCollision(upgrade))
 			{
-				SetLevel(Level + 1, false);
+				SetLevel(Level + 1, false, state);
 				upgrade->Destroyed = true;
 			}
 		}
 	}
 }
 
-void Player::SetLevel(int level, bool immediate)
+void Player::SetLevel(int level, bool immediate, GameState* state)
 {
 	if (level <= MaxLevel)
 	{
 		Level = level;
 		SetCollision(CollisionRefs[level]);
-		if (immediate) Frame = (Level - 1) / 4;
+		if (immediate) Frame = (Level - 1) * 4;
 	}
+	else
+	{
+		state->ScoreMultiplier++;
+	}
+
 }
 
 void Player::Initialise(Resources * resources, lua_State* L, luabridge::LuaRef ref)
@@ -207,6 +222,7 @@ void Player::Initialise(Resources * resources, lua_State* L, luabridge::LuaRef r
 		weapon.RemainingReload = 0;
 		weapon.MinLevel = GetInt(weaponRef, "minLevel", 1);
 		weapon.MaxLevel = GetInt(weaponRef, "maxLevel", MaxLevel);
+		weapon.SoundFrequency = GetInt(weaponRef, "soundFrequency", 1);
 		auto fireSound = GetString(weaponRef, "fireSound", "");
 		if (fireSound != "")
 		{
@@ -221,6 +237,6 @@ void Player::Initialise(Resources * resources, lua_State* L, luabridge::LuaRef r
 
 		Weapons.push_back(weapon);
 
-		SetLevel(1, true);
+		SetLevel(1, true, nullptr);
 	}
 }
