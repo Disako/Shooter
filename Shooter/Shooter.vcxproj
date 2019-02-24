@@ -160,6 +160,7 @@
     <ClCompile Include="LuaLoadedObject.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerShot.cpp" />
+    <ClCompile Include="UpgradeShip.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\LuaBridge\Source\LuaBridge\LuaBridge.h" />
@@ -176,6 +177,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerShot.h" />
     <ClInclude Include="Position.h" />
+    <ClInclude Include="UpgradeShip.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

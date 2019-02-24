@@ -50,7 +50,9 @@ level1={
 		frames = 60
 	},
 	{
-		action = "level",
-		level = "level1"
+		action = "upgrade",
+		upgrader = "upgrader",
+		location = { 110, 480 },
+		state = "left"
 	}
 }

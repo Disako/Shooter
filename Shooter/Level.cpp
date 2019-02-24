@@ -3,6 +3,7 @@
 #include "Enemy.h"
 #include "Player.h"
 #include "BackgroundObject.h"
+#include "UpgradeShip.h"
 
 Level::Level(lua_State* L, std::string levelName)
 {
@@ -108,6 +109,14 @@ Level* Level::DoUpdate(GameState* state, Resources* resources)
 					state->BackgroundObjects.push_back(obj);
 				}
 			}
+		}
+		else if (action == "upgrade")
+		{
+			auto upgrader = new UpgradeShip(resources, L, GetString(Events[Index], "upgrader", "blank"), GetString(Events[Index], "state", "None"));
+			upgrader->Location.x = GetInt(Events[Index], "location", 1, 0);
+			upgrader->Location.y = GetInt(Events[Index], "location", 2, 0);
+
+			state->GameObjects.push_back(upgrader);
 		}
 		else
 		{

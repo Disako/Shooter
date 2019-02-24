@@ -6,6 +6,7 @@
 #include <tuple>
 #include "PlayerShot.h"
 #include <sstream>
+#include "UpgradeShip.h"
 
 Player::Player(Resources* resources, lua_State* L, std::string playerType) : Player(resources, L, GameObject::GetRef(L, playerType))
 {
@@ -139,19 +140,31 @@ void Player::DoUpdate(GameState* state)
 				}
 			}
 		}
+		UpgradeShip* upgrade = dynamic_cast<UpgradeShip*>(state->GameObjects[i]);
+		if (upgrade)
+		{
+			if (CheckCollision(upgrade))
+			{
+				SetLevel(Level + 1, false);
+				upgrade->Destroyed = true;
+			}
+		}
 	}
 }
 
 void Player::SetLevel(int level, bool immediate)
 {
-	Level = level;
-	SetCollision(CollisionRefs[level]);
-	if (immediate) Frame = (Level - 1) / 4;
+	if (level <= MaxLevel)
+	{
+		Level = level;
+		SetCollision(CollisionRefs[level]);
+		if (immediate) Frame = (Level - 1) / 4;
+	}
 }
 
 void Player::Initialise(Resources * resources, lua_State* L, luabridge::LuaRef ref)
 {
-	MaxLevel = GetInt(ref, "", 1);
+	MaxLevel = GetInt(ref, "maxLevel", 1);
 
 	CollisionRefs = ref["levelCollision"];
 

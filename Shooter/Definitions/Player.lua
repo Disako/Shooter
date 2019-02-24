@@ -83,3 +83,17 @@ basicBullet = {
 		return position;
 	end
 }
+upgrader = {
+	image = "images\\Upgrader.bmp",
+	frameSize = { 20, 20 },
+	collision = { { 0, 5, 20, 15 } },
+	movement = function(position)
+		position.count = position.count + 1
+		if position.count >= 6 then
+			position.count = 0
+			position.frame = position.frame + 1
+		end
+		position.y = position.y - 1
+		return position
+	end
+}
