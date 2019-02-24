@@ -5,6 +5,7 @@ extern "C" {
 # include "lualib.h"
 }
 #include "..\LuaBridge\Source\LuaBridge\LuaBridge.h"
+#include <map>
 
 class LuaLoadedObject
 {
@@ -19,5 +20,6 @@ protected:
 	std::string GetString(luabridge::LuaRef ref, std::string key, std::string defaultValue);
 	luabridge::LuaRef GetFunction(luabridge::LuaRef ref, std::string key);
 	static luabridge::LuaRef GetRef(lua_State* L, std::string type);
+	static std::map<std::string, luabridge::LuaRef*> Refs;
 };
 

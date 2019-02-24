@@ -138,6 +138,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="Definitions\Background.lua" />
     <None Include="Definitions\Enemies.lua" />
     <None Include="Definitions\Levels.lua" />
     <None Include="Definitions\Player.lua" />
@@ -147,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="app.cpp" />
+    <ClCompile Include="BackgroundObject.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameState.cpp" />
@@ -161,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\LuaBridge\Source\LuaBridge\LuaBridge.h" />
+    <ClInclude Include="BackgroundObject.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameState.h" />

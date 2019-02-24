@@ -1,6 +1,8 @@
 #include "Level.h"
 #include <sstream>
 #include "Enemy.h"
+#include "Player.h"
+#include "BackgroundObject.h"
 
 Level::Level(lua_State* L, std::string levelName)
 {
@@ -28,15 +30,21 @@ Level::~Level()
 
 Level* Level::DoUpdate(GameState* state, Resources* resources) 
 {
-	Level* nextLevel = this;
-
 	while (Wait == 0)
 	{
 		if (Index >= Events.size()) Index = 0;
 
 		auto action = GetString(Events[Index], "action", "none");
 
-		if (action == "spawn")
+		if (action == "player")
+		{
+			auto player = new Player(resources, L, GetString(Events[Index], "player", "None"));
+			player->Location.x = GetInt(Events[Index], "location", 1, 0);
+			player->Location.y = GetInt(Events[Index], "location", 2, 0);
+
+			state->GameObjects.push_back(player);
+		}
+		else if (action == "spawn")
 		{
 			auto enemy = new Enemy(resources, L, GetString(Events[Index], "enemy", "blank"), GetString(Events[Index], "state", "None"));
 			enemy->Location.x = GetInt(Events[Index], "location", 1, 0);
@@ -50,7 +58,8 @@ Level* Level::DoUpdate(GameState* state, Resources* resources)
 		}
 		else if (action == "level")
 		{
-			nextLevel = new Level(L, GetString(Events[Index], "level", "blank"));
+			auto nextLevel = new Level(L, GetString(Events[Index], "level", "blank"));
+			return nextLevel->DoUpdate(state, resources);
 		}
 		else if (action == "music")
 		{
@@ -75,6 +84,42 @@ Level* Level::DoUpdate(GameState* state, Resources* resources)
 				resources->CurrentMusic = "";
 			}
 		}
+		else if (action == "backgroundObj")
+		{
+			BackgroundSpawn spawn;
+			auto type = GetString(Events[Index], "type", "none");
+			spawn.probability = GetInt(Events[Index], "probability", 0);
+			spawn.initialState = GetString(Events[Index], "state", "none");
+			state->BackgroundSpawns[type] = spawn;
+
+			if (spawn.probability > 0)
+			{
+				auto fill = GetInt(Events[Index], "fill", 0);
+				for(int i = 0; i < fill; i++)
+				{
+					auto prob = spawn.probability;
+					while (prob >= 100)
+					{
+						auto obj = new BackgroundObject(resources, L, type, spawn.initialState);
+						state->BackgroundObjects.push_back(obj);
+						prob -= 100;
+						for (int j = i; j < fill; j++)
+						{
+							obj->DoUpdate(state);
+						}
+					}
+					if (rand() % 100 < prob)
+					{
+						auto obj = new BackgroundObject(resources, L, type, spawn.initialState);
+						state->BackgroundObjects.push_back(obj);
+						for (int j = i; j < fill; j++)
+						{
+							obj->DoUpdate(state);
+						}
+					}
+				}
+			}
+		}
 		else
 		{
 			std::stringstream error;
@@ -87,5 +132,5 @@ Level* Level::DoUpdate(GameState* state, Resources* resources)
 
 	Wait--;
 
-	return nextLevel;
+	return this;
 }

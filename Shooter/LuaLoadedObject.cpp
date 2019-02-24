@@ -17,9 +17,18 @@ LuaLoadedObject::~LuaLoadedObject()
 {
 }
 
+std::map<std::string, luabridge::LuaRef*> LuaLoadedObject::Refs;
+
 luabridge::LuaRef LuaLoadedObject::GetRef(lua_State* L, std::string type)
 {
-	auto ref = luabridge::getGlobal(L, type.data());
+	/*luabridge::LuaRef* existingRef = Refs[type];
+
+	if (existingRef)
+		return *existingRef;*/
+
+	luabridge::LuaRef ref = luabridge::getGlobal(L, type.data());
+
+	//Refs[type] = ref;
 
 	if (ref.isNil())
 	{

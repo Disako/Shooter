@@ -9,9 +9,9 @@
 #include "Position.h"
 #include "Level.h"
 #include "Number.h"
+#include "BackgroundObject.h"
 
-void CreateShip(GameState* state, Resources* resources, lua_State* L);
-Level* DoUpdate(GameState* state, Resources* resources, Level* level);
+Level* DoUpdate(GameState* state, Resources* resources, Level* level, lua_State* L);
 void DrawScreen(SDL_Surface* screen, GameState* state, Number* number, Resources* resources);
 lua_State* SetupLua();
 
@@ -36,18 +36,16 @@ int main(int argc, char* args[])
 	auto number = new Number(resources);
 
 	lua_State* L = SetupLua();
-	
-	CreateShip(state, resources, L);
 
 	Uint32 lastRefreshTicks = SDL_GetTicks();
 
-	auto level = new Level(L, "level1");
+	auto level = new Level(L, "startUp");
 
 	do
 	{
 		SDL_PollEvent(&event);
 		state->Keys = SDL_GetKeyboardState(NULL);
-		level = DoUpdate(state, resources, level);
+		level = DoUpdate(state, resources, level, L);
 		DrawScreen(screen, state, number, resources);
 
 		Uint32 currentTicks;
@@ -76,8 +74,13 @@ lua_State* SetupLua()
 {
 	lua_State* L = luaL_newstate();
 
-	const int fileCount = 3;
-	std::string files[fileCount] = { "Definitions\\Enemies.lua", "Definitions\\Player.lua", "Definitions\\Levels.lua" };
+	const int fileCount = 4;
+	std::string files[fileCount] = { 
+		"Definitions\\Enemies.lua", 
+		"Definitions\\Player.lua", 
+		"Definitions\\Levels.lua",
+		"Definitions\\Background.lua"
+	};
 
 	for (unsigned int i = 0; i < fileCount; i++)
 	{
@@ -102,30 +105,18 @@ lua_State* SetupLua()
 	return L;
 }
 
-void CreateShip(GameState* state, Resources* resources, lua_State* L)
+void UpdateObjectList(std::vector<GameObject*>* objects, GameState* state, Resources* resources)
 {
-	Player* ship = new Player(resources, L);
-
-	ship->Location.x = state->ScreenWidth / 2 - ship->Location.w / 2;
-	ship->Location.y = state->ScreenHeight - ship->Location.h - 20;
-
-	state->GameObjects.push_back(ship);
-}
-
-Level* DoUpdate(GameState* state, Resources* resources, Level* level)
-{
-	level = level->DoUpdate(state, resources);
-
-	for (unsigned int i = 0; i < state->GameObjects.size(); i++)
+	for (unsigned int i = 0; i < objects->size(); i++)
 	{
-		state->GameObjects[i]->DoUpdate(state);
+		objects->at(i)->DoUpdate(state);
 	}
 
 	std::vector<int> indexesToDelete = std::vector<int>();
 
-	for (unsigned int i = 0; i < state->GameObjects.size(); i++)
+	for (unsigned int i = 0; i < objects->size(); i++)
 	{
-		if (state->GameObjects[i]->Destroyed)
+		if (objects->at(i)->Destroyed)
 		{
 			indexesToDelete.push_back(i);
 		}
@@ -133,10 +124,32 @@ Level* DoUpdate(GameState* state, Resources* resources, Level* level)
 
 	for (int i = indexesToDelete.size() - 1; i >= 0; i--)
 	{
-		state->GameObjects[indexesToDelete[i]]->Destroy(state, resources);
-		delete state->GameObjects[indexesToDelete[i]];
-		state->GameObjects.erase(state->GameObjects.begin() + indexesToDelete[i]);
+		objects->at(indexesToDelete[i])->Destroy(state, resources);
+		delete objects->at(indexesToDelete[i]);
+		objects->erase(objects->begin() + indexesToDelete[i]);
 	}
+}
+
+Level* DoUpdate(GameState* state, Resources* resources, Level* level, lua_State* L)
+{
+	level = level->DoUpdate(state, resources);
+
+	for (auto& spawn : state->BackgroundSpawns)
+	{
+		auto prob = spawn.second.probability;
+		while (prob >= 100)
+		{
+			state->BackgroundObjects.push_back(new BackgroundObject(resources, L, spawn.first, spawn.second.initialState));
+			prob -= 100;
+		}
+		if (rand() % 100 < prob)
+		{
+			state->BackgroundObjects.push_back(new BackgroundObject(resources, L, spawn.first, spawn.second.initialState));
+		}
+	}
+
+	UpdateObjectList(&state->BackgroundObjects, state, resources);
+	UpdateObjectList(&state->GameObjects, state, resources);
 
 	return level;
 }
@@ -144,6 +157,11 @@ Level* DoUpdate(GameState* state, Resources* resources, Level* level)
 void DrawScreen(SDL_Surface* screen, GameState* state, Number* number, Resources* resources)
 {
 	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+
+	for (unsigned int i = 0; i < state->BackgroundObjects.size(); i++)
+	{
+		state->BackgroundObjects[i]->Draw(screen);
+	}
 
 	for (unsigned int i = 0; i < state->GameObjects.size(); i++)
 	{

@@ -7,7 +7,7 @@
 #include "PlayerShot.h"
 #include <sstream>
 
-Player::Player(Resources* resources, lua_State* L) : Player(resources, L, GameObject::GetRef(L, "player"))
+Player::Player(Resources* resources, lua_State* L, std::string playerType) : Player(resources, L, GameObject::GetRef(L, playerType))
 {
 }
 

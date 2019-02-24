@@ -11,6 +11,10 @@ GameState::GameState()
 
 GameState::~GameState()
 {
+	for (unsigned int i = 0; i < BackgroundObjects.size(); i++)
+	{
+		delete BackgroundObjects[i];
+	}
 	for (unsigned int i = 0; i < GameObjects.size(); i++)
 	{
 		delete GameObjects[i];

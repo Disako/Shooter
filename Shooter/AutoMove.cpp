@@ -1,7 +1,6 @@
 #include "AutoMove.h"
 #include "Position.h"
 
-
 AutoMove::AutoMove(Resources* resources, luabridge::LuaRef ref, std::string initialState) : GameObject(resources, ref)
 {
 	State = initialState;
@@ -32,7 +31,7 @@ void AutoMove::DoUpdate(GameState * state)
 		Frame = position.Frame;
 		Count = position.Count;
 		if (Frame < 0) Frame = Frames.size() - 1;
-		if (Frame >= Frames.size()) Frame = 0;
+		if (Frame >= (int)Frames.size()) Frame = 0;
 	}
 
 	if (IsOutOfBounds(state))

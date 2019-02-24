@@ -19,7 +19,7 @@ class Player :
 	public GameObject
 {
 public:
-	Player(Resources* resources, lua_State* L);
+	Player(Resources* resources, lua_State* L, std::string playerType);
 	~Player() override;
 	void DoUpdate(GameState* state) override;
 private:
