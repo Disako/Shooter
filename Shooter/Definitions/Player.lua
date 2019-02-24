@@ -137,11 +137,11 @@ upgrader = {
 	collision = { { 0, 5, 20, 15 } },
 	movement = function(position)
 		position.count = position.count + 1
-		if position.count >= 6 then
-			position.count = 0
+		if position.count % 10 == 0 then
 			position.frame = position.frame + 1
 		end
-		position.y = position.y - 1
+		position.y = 480 - math.floor(math.sin(math.rad(position.count / 3)) * 150)
+		position.x = 310 - math.floor(math.cos(math.rad(position.count / 3)) * 200)		
 		return position
 	end
 }
