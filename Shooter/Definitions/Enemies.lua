@@ -6,6 +6,7 @@ spinner = {
 	collision = {
 		{ 0, 0, 20, 20 }
 	},
+	score = 100,
 	spawns = {
 		{
 			identifier = "laser",

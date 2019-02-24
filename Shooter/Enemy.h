@@ -30,6 +30,7 @@ public:
 	void Damage(unsigned int damage);
 	bool Immune;
 	void DoUpdate(GameState* state) override;
+	unsigned int Score;
 private:
 	int HP;
 	Enemy(Resources* resources, lua_State* L, luabridge::LuaRef ref, std::string initialState);

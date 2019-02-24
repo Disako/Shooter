@@ -8,10 +8,11 @@
 #include <string>
 #include "Position.h"
 #include "Level.h"
+#include "Number.h"
 
 void CreateShip(GameState* state, Resources* resources, lua_State* L);
 Level* DoUpdate(GameState* state, Resources* resources, Level* level);
-void DrawScreen(SDL_Surface* screen, GameState* state);
+void DrawScreen(SDL_Surface* screen, GameState* state, Number* number);
 lua_State* SetupLua();
 
 int main(int argc, char* args[])
@@ -32,6 +33,8 @@ int main(int argc, char* args[])
 
 	Resources* resources = new Resources(window);
 
+	auto number = new Number(resources);
+
 	lua_State* L = SetupLua();
 	
 	CreateShip(state, resources, L);
@@ -45,7 +48,7 @@ int main(int argc, char* args[])
 		SDL_PollEvent(&event);
 		state->Keys = SDL_GetKeyboardState(NULL);
 		level = DoUpdate(state, resources, level);
-		DrawScreen(screen, state);
+		DrawScreen(screen, state, number);
 
 		Uint32 currentTicks;
 
@@ -138,7 +141,7 @@ Level* DoUpdate(GameState* state, Resources* resources, Level* level)
 	return level;
 }
 
-void DrawScreen(SDL_Surface* screen, GameState* state)
+void DrawScreen(SDL_Surface* screen, GameState* state, Number* number)
 {
 	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
 
@@ -146,4 +149,6 @@ void DrawScreen(SDL_Surface* screen, GameState* state)
 	{
 		state->GameObjects[i]->Draw(screen);
 	}
+
+	number->Draw(screen, state->Score, state->ScreenWidth - 2, 2, Alignment::Right);
 }

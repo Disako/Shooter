@@ -25,6 +25,10 @@ void PlayerShot::DoUpdate(GameState * state)
 			{
 				enemy->Damage(Damage);
 				Destroyed = true;
+				if (enemy->Destroyed)
+				{
+					state->Score += enemy->Score;
+				}
 			}
 		}
 	}

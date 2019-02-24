@@ -24,6 +24,7 @@ void Enemy::Initialise(Resources * resources, lua_State* L, luabridge::LuaRef re
 {
 	HP = GetInt(ref, "hp", 1);
 	Immune = GetBool(ref, "immune", false);
+	Score = GetInt(ref, "score", 0);
 
 	auto spawns = ref["spawns"];
 	Spawns.clear();

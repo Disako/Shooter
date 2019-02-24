@@ -15,5 +15,7 @@ public:
 
 	int ScreenWidth;
 	int ScreenHeight;
+	unsigned int Score = 0;
+	bool GameOver = false;
 };
 

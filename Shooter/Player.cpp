@@ -113,6 +113,7 @@ void Player::DoUpdate(GameState* state)
 			{
 				enemy->Damage(10);
 				Destroyed = true;
+				state->GameOver = true;
 			}
 		}
 	}
