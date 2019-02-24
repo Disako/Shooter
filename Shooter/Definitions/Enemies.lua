@@ -60,7 +60,7 @@ stomper = {
 				position.frame = 2
 			end
 		else
-			position.y = position.y + 10
+			position.y = position.y + 5
 			position.frame = 3
 		end
 		return position
