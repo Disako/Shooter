@@ -32,10 +32,10 @@ protected:
 	std::vector<SDL_Rect> Frames;
 	double Rad(int degrees);
 	int Random(int min, int max);
+	void SetCollision(luabridge::LuaRef ref);
 private:
 	SDL_Surface* Image;
 	std::vector<SDL_Rect> Collision;
-	void SetCollision(luabridge::LuaRef ref);
 	void Initialise(Resources* resources, luabridge::LuaRef ref);
 	Mix_Chunk* ExplodeSound;
 	int ExplodeVolume;

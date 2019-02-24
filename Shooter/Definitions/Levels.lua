@@ -8,6 +8,7 @@ startUp={
 	{
 		action = "player",
 		player = "player",
+		level = 2,
 		location = { 300, 400 }
 	},
 	{

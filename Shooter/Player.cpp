@@ -22,6 +22,20 @@ Player::~Player()
 
 void Player::DoUpdate(GameState* state)
 {
+	if (Invincibility > 0)
+	{
+		Invincibility--;
+	}
+
+	if (Frame < (Level - 1) * 4)
+	{
+		Frame++;
+	}
+	else
+	{
+		Frame = (Level - 1) * 4;
+	}
+
 	const int maxSpeed = 5;
 
 	int up = 0, left = 0;
@@ -39,9 +53,9 @@ void Player::DoUpdate(GameState* state)
 	auto firing = (state->Keys[SDL_SCANCODE_SPACE] || state->Keys[SDL_SCANCODE_RETURN]);
 	for (unsigned int i = 0; i < Weapons.size(); i++)
 	{
-		if (firing && Weapons[i].RemainingReload == 0)
+		if (firing && Weapons[i].RemainingReload == 0 && Level >= Weapons[i].MinLevel && Level <= Weapons[i].MaxLevel)
 		{
-			auto shot = new PlayerShot(Weapons[i].ResourcesStore, Weapons[i].Ref, Weapons[i].InitialState);
+			auto shot = new PlayerShot(ResourcesStore, Weapons[i].Ref, Weapons[i].InitialState);
 
 			shot->Location.x = Location.x + Weapons[i].PositionX;
 			shot->Location.y = Location.y + Weapons[i].PositionY;
@@ -107,22 +121,56 @@ void Player::DoUpdate(GameState* state)
 	for (unsigned int i = 0; i < state->GameObjects.size(); i++)
 	{
 		Enemy* enemy = dynamic_cast<Enemy*>(state->GameObjects[i]);
-		if (enemy)
+		if (!Invincibility && enemy)
 		{
 			if (CheckCollision(enemy))
 			{
 				enemy->Damage(10);
-				Destroyed = true;
-				state->GameOver = true;
+				if (Level == 1)
+				{
+					Destroyed = true;
+					state->GameOver = true;
+				}
+				else
+				{
+					Destroy(state, ResourcesStore);
+					SetLevel(Level - 1, true);
+					Invincibility = 60;
+				}
 			}
 		}
 	}
 }
 
+void Player::SetLevel(int level, bool immediate)
+{
+	Level = level;
+	SetCollision(CollisionRefs[level]);
+	if (immediate) Frame = (Level - 1) / 4;
+}
+
 void Player::Initialise(Resources * resources, lua_State* L, luabridge::LuaRef ref)
 {
+	MaxLevel = GetInt(ref, "", 1);
+
+	CollisionRefs = ref["levelCollision"];
+
+	if (CollisionRefs.isNil())
+	{
+		throw std::runtime_error("levelCollision is required");
+	}
+	else if (!CollisionRefs.isTable())
+	{
+		throw std::runtime_error("Invalid value for levelCollision, expects table");
+	}
+	else if (CollisionRefs.length() < MaxLevel)
+	{
+		throw std::runtime_error("Must have as many levelCollision items as the max level");
+	}
+
 	auto weapons = ref["weapons"];
 	Weapons.clear();
+	ResourcesStore = resources;
 
 	if (weapons.isNil()) return;
 	if (!weapons.isTable())
@@ -144,7 +192,8 @@ void Player::Initialise(Resources * resources, lua_State* L, luabridge::LuaRef r
 		weapon.PositionX = GetInt(weaponRef, "position", 1, 0);
 		weapon.PositionY = GetInt(weaponRef, "position", 2, 0);
 		weapon.RemainingReload = 0;
-		weapon.ResourcesStore = resources;
+		weapon.MinLevel = GetInt(weaponRef, "minLevel", 1);
+		weapon.MaxLevel = GetInt(weaponRef, "maxLevel", MaxLevel);
 		auto fireSound = GetString(weaponRef, "fireSound", "");
 		if (fireSound != "")
 		{
@@ -158,5 +207,7 @@ void Player::Initialise(Resources * resources, lua_State* L, luabridge::LuaRef r
 
 
 		Weapons.push_back(weapon);
+
+		SetLevel(1, true);
 	}
 }

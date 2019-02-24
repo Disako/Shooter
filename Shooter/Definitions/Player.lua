@@ -1,10 +1,26 @@
 player = {
 	image = "images\\Ship.bmp",
-	collision = {
-		{ 4, 9, 8, 24 },
-		{ 28, 9, 8, 24 },
-		{ 13, 16, 14, 18 }
+	levelCollision = {
+		{
+			{ 17, 16, 6, 12 }
+		},
+		{
+			{ 4, 9, 8, 24 },
+			{ 28, 9, 8, 24 },
+			{ 13, 16, 14, 18 }
+		},
+		{
+			{ 4, 9, 8, 24 },
+			{ 28, 9, 8, 24 },
+			{ 13, 16, 14, 18 }
+		},
+		{
+			{ 4, 9, 8, 24 },
+			{ 28, 9, 8, 24 },
+			{ 13, 16, 14, 18 }
+		}
 	},
+	frameSize = { 40, 40 },
 	weapons = {
 		{
 			identifier = "basicBullet",
@@ -12,9 +28,28 @@ player = {
 			initialState = "normal",
 			position = { 17, 15 },
 			fireSound = "Sounds\\NFF-laser.wav",
-			fireVolume = 10
+			fireVolume = 10,
+			minLevel = 1,
+			maxLevel = 3
+		},
+		{
+			identifier = "basicBullet",
+			reload = 20,
+			initialState = "left",
+			position = { 0, 15 },
+			minLevel = 2,
+			maxLevel = 4
+		},
+		{
+			identifier = "basicBullet",
+			reload = 20,
+			initialState = "right",
+			position = { 34, 15 },
+			minLevel = 2,
+			maxLevel = 4
 		}
 	},
+	maxLevel = 4,
 	explodeSound = "Sounds\\NFF-cannon.wav",
 	explodeVolume = 20,
 	explodeParticles = {
@@ -36,7 +71,15 @@ basicBullet = {
 	},
 	damage = 1,
 	movement = function(position)
-		position.y = position.y - 10
+		if position.state == "normal" then
+			position.y = position.y - 10
+		elseif position.state == "left" then 
+			position.y = position.y - 8
+			position.x = position.x - 6
+		elseif position.state == "right" then
+			position.y = position.y - 8
+			position.x = position.x + 6
+		end
 		return position;
 	end
 }
