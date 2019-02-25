@@ -105,6 +105,7 @@ basicBullet = {
 			position.y = position.y - 8
 			position.x = position.x + 6
 		end
+		return position
 	end
 }
 missile = {
@@ -118,6 +119,7 @@ missile = {
 		end
 		position.y = position.y - math.floor(position.count / 24) - 1
 		position.frame = position.frame + 1
+		return position
 	end
 }
 obliterate = {
@@ -126,6 +128,7 @@ obliterate = {
 	damage = 1,
 	movement = function(position)
 		if position.count == 0 then position.count = 1 else position.x = 1000 end
+		return position
 	end
 }
 upgrader = {
@@ -143,5 +146,6 @@ upgrader = {
 			position.x = 310 + math.floor(math.cos(math.rad(position.count / 3)) * 200)
 		end
 		position.y = 480 - math.floor(math.sin(math.rad(position.count / 3)) * 150)	
+		return position
 	end
 }

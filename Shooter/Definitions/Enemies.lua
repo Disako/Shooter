@@ -23,6 +23,7 @@ spinner = {
 			position.count = 0
 			if position.state == "right" then position.frame = position.frame + 1 else position.frame = position.frame - 1 end
 		end
+		return position
 	end,
 	explodeParticles = {
 		{
@@ -62,6 +63,7 @@ stomper = {
 			position.y = position.y + 5
 			position.frame = 3
 		end
+		return position
 	end,
 	explodeParticles = {
 		{
@@ -111,6 +113,7 @@ heavy = {
 		else
 			position.y = position.y + 1
 		end
+		return position
 	end,
 	explodeParticles = {
 		{
@@ -155,5 +158,6 @@ laser = {
 	immune = true,
 	movement = function(position)
 		position.y = position.y + 5
+		return position
 	end
 }

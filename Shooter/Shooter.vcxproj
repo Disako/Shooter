@@ -176,6 +176,7 @@
     <ClInclude Include="LuaLoadedObject.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerShot.h" />
+    <ClInclude Include="Position.h" />
     <ClInclude Include="UpgradeShip.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

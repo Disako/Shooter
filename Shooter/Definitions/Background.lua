@@ -11,6 +11,7 @@ smallStar = {
 			position.y = position.y + 1
 			position.count = 0
 		end
+		return position
 	end
 }
 bigStar = {
@@ -26,5 +27,6 @@ bigStar = {
 			position.y = position.y + 1
 			position.count = 0
 		end
+		return position
 	end
 }
