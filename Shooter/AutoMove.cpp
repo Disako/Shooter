@@ -1,5 +1,4 @@
 #include "AutoMove.h"
-#include "Position.h"
 
 AutoMove::AutoMove(Resources* resources, luabridge::LuaRef ref, std::string initialState) : GameObject(resources, ref)
 {
@@ -16,20 +15,14 @@ void AutoMove::DoUpdate(GameState * state)
 {
 	if (Movement)
 	{
-		Position position;
-		position.X = Location.x;
-		position.Y = Location.y;
-		position.State = State;
-		position.Frame = Frame;
-		position.Count = Count;
+		X = Location.x;
+		Y = Location.y;
 
-		position = Movement(position);
+		Movement(this);
 
-		Location.x = position.X;
-		Location.y = position.Y;
-		State = position.State;
-		Frame = position.Frame;
-		Count = position.Count;
+		Location.x = X;
+		Location.y = Y;
+
 		if (Frame < 0) Frame = Frames.size() - 1;
 		if (Frame >= (int)Frames.size()) Frame = 0;
 	}

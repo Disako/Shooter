@@ -6,7 +6,6 @@
 #include <vector>
 #include <sstream>
 #include <string>
-#include "Position.h"
 #include "Level.h"
 #include "Number.h"
 #include "BackgroundObject.h"
@@ -110,12 +109,12 @@ lua_State* SetupLua()
 	lua_pcall(L, 0, 0, 0);
 
 	luabridge::getGlobalNamespace(L)
-		.beginClass<Position>("position")
-		.addData("x", &Position::X, true)
-		.addData("y", &Position::Y, true)
-		.addData("frame", &Position::Frame, true)
-		.addData("count", &Position::Count, true)
-		.addData("state", &Position::State, true);
+		.beginClass<AutoMove>("autoMove")
+		.addData("x", &AutoMove::X, true)
+		.addData("y", &AutoMove::Y, true)
+		.addData("frame", &AutoMove::Frame, true)
+		.addData("count", &AutoMove::Count, true)
+		.addData("state", &AutoMove::State, true);
 
 	return L;
 }

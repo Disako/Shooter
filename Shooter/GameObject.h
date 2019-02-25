@@ -24,11 +24,11 @@ public:
 	virtual void DoUpdate(GameState* state);
 	bool CheckCollision(GameObject* otherObject);
 	void Destroy(GameState* state, Resources* resources);
+	int Frame;
 protected:
 	GameObject(Resources* resources, luabridge::LuaRef ref);
 	virtual SDL_Surface* GetCurrentImage();
 	bool IsOutOfBounds(GameState* state);
-	int Frame;
 	std::vector<SDL_Rect> Frames;
 	double Rad(int degrees);
 	int Random(int min, int max);

@@ -7,7 +7,6 @@ extern "C" {
 #include "GameObject.h"
 #include "SDL.h"
 #include "Resources.h"
-#include "Position.h"
 #include <Tuple>
 #include <stdexcept>
 #include <sstream>

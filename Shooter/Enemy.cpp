@@ -5,7 +5,6 @@ extern "C" {
 # include "lauxlib.h"
 # include "lualib.h"
 }
-#include "Position.h"
 
 Enemy::Enemy(Resources* resources, lua_State* L, std::string type, std::string initialState) : Enemy(resources, L, LuaLoadedObject::GetRef(L, type), initialState)
 {

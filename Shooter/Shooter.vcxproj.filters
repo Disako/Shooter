@@ -95,9 +95,6 @@
     <ClInclude Include="..\LuaBridge\Source\LuaBridge\LuaBridge.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Position.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AutoMove.h">
       <Filter>Header Files</Filter>
     </ClInclude>
