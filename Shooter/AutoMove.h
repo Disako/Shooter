@@ -1,5 +1,8 @@
 #pragma once
 #include "GameObject.h"
+#include <functional>
+#include "Position.h"
+
 class AutoMove :
 	public GameObject
 {
@@ -11,7 +14,7 @@ protected:
 	std::string State;
 private:
 	void Initialise(Resources* resources, luabridge::LuaRef ref);
-	luabridge::LuaRef Movement = nullptr;
+	std::function<Position(Position)> Movement = nullptr;
 	int Count = 0;
 };
 

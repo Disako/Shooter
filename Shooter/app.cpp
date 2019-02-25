@@ -111,11 +111,11 @@ lua_State* SetupLua()
 
 	luabridge::getGlobalNamespace(L)
 		.beginClass<Position>("position")
-		.addProperty("x", &Position::getX, &Position::setX)
-		.addProperty("y", &Position::getY, &Position::setY)
-		.addProperty("frame", &Position::getFrame, &Position::setFrame)
-		.addProperty("count", &Position::getCount, &Position::setCount)
-		.addProperty("state", &Position::getState, &Position::setState);
+		.addData("x", &Position::X, true)
+		.addData("y", &Position::Y, true)
+		.addData("frame", &Position::Frame, true)
+		.addData("count", &Position::Count, true)
+		.addData("state", &Position::State, true);
 
 	return L;
 }
