@@ -106,7 +106,18 @@ basicBullet = {
 			position.x = position.x + 6
 		end
 		return position
-	end
+	end,
+	explodeParticles = {
+		{
+			image = "images\\explode.bmp",
+			frameSize = { 20, 20 },
+			count = { 1, 1 },
+			center = { -7, -7 },
+			positionRadius = { 0, 0 },
+			ttl = { 30, 60 },
+			speed = { 0, 2 }
+		}
+	}
 }
 missile = {
 	image = "images\\Missile.bmp",
@@ -120,7 +131,18 @@ missile = {
 		position.y = position.y - math.floor(position.count / 24) - 1
 		position.frame = position.frame + 1
 		return position
-	end
+	end,
+	explodeParticles = {
+		{
+			image = "images\\explode.bmp",
+			frameSize = { 20, 20 },
+			count = { 1, 1 },
+			center = { -6, -5 },
+			positionRadius = { 0, 0 },
+			ttl = { 30, 60 },
+			speed = { 0, 2 }
+		}
+	}
 }
 obliterate = {
 	image = "images\\obliterate.bmp",
