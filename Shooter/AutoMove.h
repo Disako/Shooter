@@ -15,6 +15,8 @@ protected:
 private:
 	void Initialise(Resources* resources, luabridge::LuaRef ref);
 	std::function<Position(Position)> Movement = nullptr;
+	bool hasMovementFunction;
 	int Count = 0;
+	int SpeedX, SpeedY, FramesPerMove;
 };
 

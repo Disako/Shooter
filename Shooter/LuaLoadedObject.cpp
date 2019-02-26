@@ -140,7 +140,7 @@ luabridge::LuaRef LuaLoadedObject::GetFunction(luabridge::LuaRef ref, std::strin
 {
 	if (ref[key].isNil())
 	{
-		return nullptr;
+		return ref[key];
 	}
 	else if (ref[key].isFunction())
 	{

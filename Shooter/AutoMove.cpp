@@ -33,6 +33,16 @@ void AutoMove::DoUpdate(GameState * state)
 		if (Frame < 0) Frame = Frames.size() - 1;
 		if (Frame >= (int)Frames.size()) Frame = 0;
 	}
+	else
+	{
+		Count++;
+		if (Count >= FramesPerMove)
+		{
+			Count = 0;
+			Location.x += SpeedX;
+			Location.y += SpeedY;
+		}
+	}
 
 	if (IsOutOfBounds(state))
 	{
@@ -42,6 +52,17 @@ void AutoMove::DoUpdate(GameState * state)
 
 void AutoMove::Initialise(Resources * resources, luabridge::LuaRef ref)
 {
-	Movement = GetFunction(ref, "movement");
+	auto movement = GetFunction(ref, "movement");
+	if (movement.isNil())
+	{
+		Movement = nullptr;
+	}
+	else
+	{
+		Movement = movement;
+	}
 	Count = 0;
+	SpeedX = GetInt(ref, "speedX", 0);
+	SpeedY = GetInt(ref, "speedY", 0);
+	FramesPerMove = GetInt(ref, "framesPerMove", 0);
 }
