@@ -11,5 +11,6 @@ public:
 private:
 	void Initialise(Resources* resources, luabridge::LuaRef ref);
 	int Damage;
+	bool Piercing;
 };
 

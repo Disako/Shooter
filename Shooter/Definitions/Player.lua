@@ -94,7 +94,7 @@ basicBullet = {
 	collision = {
 		{ 0, 0, 6, 6 }
 	},
-	damage = 1,
+	damage = 5,
 	movement = function(position)
 		if position.state == "normal" then
 			position.y = position.y - 10
@@ -123,7 +123,7 @@ missile = {
 	image = "images\\Missile.bmp",
 	collision = { { 0, 0, 8, 10 } },
 	frameSize = { 8, 10 },
-	damage = 3,
+	damage = 10,
 	movement = function(position)
 		if position.count < 120 then
 			position.count = position.count + 1
@@ -148,6 +148,7 @@ obliterate = {
 	image = "images\\obliterate.bmp",
 	collision = { { 0, 0, 4, 480 } },
 	damage = 1,
+	piercing = true,
 	movement = function(position)
 		if position.count == 0 then position.count = 1 else position.x = 1000 end
 		return position

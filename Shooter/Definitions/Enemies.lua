@@ -40,10 +40,10 @@ spinner = {
 	explodeVolume = 20,
 }
 stomper = {
-	hp = 10,
+	hp = 50,
 	image = "images\\Stomper.bmp",
 	collision = {
-		{ 0, 30, 120, 10 },
+		{ 0, 30, 60, 10 },
 		{ 20, 0, 20, 30}
 	},
 	score = 500,
@@ -80,7 +80,7 @@ stomper = {
 	explodeVolume = 20,
 }
 heavy = {
-	hp = 5,
+	hp = 25,
 	image = "images\\Heavy.bmp",
 	collision = {
 		{ 0, 14, 40, 17 },

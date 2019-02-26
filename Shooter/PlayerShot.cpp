@@ -24,7 +24,7 @@ void PlayerShot::DoUpdate(GameState * state)
 			if (CheckCollision(enemy))
 			{
 				enemy->Damage(Damage);
-				Destroyed = true;
+				Destroyed = !Piercing;
 				if (enemy->Destroyed)
 				{
 					state->Score += enemy->Score * state->ScoreMultiplier;
@@ -37,4 +37,5 @@ void PlayerShot::DoUpdate(GameState * state)
 void PlayerShot::Initialise(Resources * resources, luabridge::LuaRef ref)
 {
 	Damage = GetInt(ref, "damage", 1);
+	Piercing = GetBool(ref, "piercing", false);
 }
