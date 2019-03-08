@@ -131,7 +131,7 @@ void Player::DoUpdate(GameState* state)
 	for (unsigned int i = 0; i < state->GameObjects.size(); i++)
 	{
 		Enemy* enemy = dynamic_cast<Enemy*>(state->GameObjects[i]);
-		if (!Invincibility && enemy)
+		if (Invincibility <= 0 && enemy)
 		{
 			if (CheckCollision(enemy))
 			{
@@ -143,13 +143,13 @@ void Player::DoUpdate(GameState* state)
 				}
 				else
 				{
-					Destroy(state, ResourcesStore);
 					if (Shielded)
 					{
 						Shielded = false;
 					}
 					else
 					{
+						Destroy(state, ResourcesStore);
 						SetLevel(Level - 1, true, state);
 						state->ScoreMultiplier = 1;
 					}
