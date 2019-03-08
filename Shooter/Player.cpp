@@ -135,7 +135,7 @@ void Player::DoUpdate(GameState* state)
 		{
 			if (CheckCollision(enemy))
 			{
-				enemy->Damage(10);
+				enemy->Damage(25);
 				if (Level == 1)
 				{
 					Destroyed = true;
