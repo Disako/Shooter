@@ -73,6 +73,10 @@
     <IncludePath>$(SolutionDir)packages\sdl2.nuget.2.0.9\build\native\include;$(SolutionDir)packages\lua.5.3.5\build\native\include;$(SolutionDir)LuaBridge\Source;$(SolutionDir)packages\sdl2_mixer.nuget.2.0.4\build\native\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)packages\sdl2.nuget.2.0.9\build\native\lib\Win32\dynamic;$(SolutionDir)packages\sdl2_mixer.nuget.2.0.4\build\native\lib\Win32\dynamic;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(SolutionDir)packages\sdl2.nuget.2.0.9\build\native\include;$(SolutionDir)packages\lua.5.3.5\build\native\include;$(SolutionDir)LuaBridge\Source;$(SolutionDir)packages\sdl2_mixer.nuget.2.0.4\build\native\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)packages\sdl2.nuget.2.0.9\build\native\lib\Win32\dynamic;$(SolutionDir)packages\sdl2_mixer.nuget.2.0.4\build\native\lib\Win32\dynamic;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -119,9 +123,17 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "$(SolutionDir)packages\sdl2.nuget.redist.2.0.9\build\native\bin\Win32\dynamic\SDL2.dll" "$(TargetDir)"</Command>
+      <Command>copy "$(SolutionDir)packages\lua.redist.5.3.5\build\native\bin\v141\Win32\Release\lua.dll" "$(TargetDir)"</Command>
+      <Command>copy "$(SolutionDir)packages\sdl2_mixer.nuget.redist.2.0.4\build\native\bin\Win32\dynamic\*.dll" "$(TargetDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
