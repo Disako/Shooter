@@ -7,6 +7,7 @@
 #include <sstream>
 #include <string>
 #include "Position.h"
+#include "PlayerInfo.h"
 #include "Level.h"
 #include "Number.h"
 #include "BackgroundObject.h"
@@ -116,6 +117,12 @@ lua_State* SetupLua()
 		.addData("frame", &Position::Frame, true)
 		.addData("count", &Position::Count, true)
 		.addData("state", &Position::State, true);
+	luabridge::getGlobalNamespace(L)
+		.beginClass<PlayerInfo>("playerInfo")
+		.addData("shielded", &PlayerInfo::Shielded, true)
+		.addData("maxLevel", &PlayerInfo::MaxLevel, false)
+		.addData("level", &PlayerInfo::Level, true)
+		.addData("scoreMultiplier", &PlayerInfo::ScoreMultiplier, true);
 
 	return L;
 }

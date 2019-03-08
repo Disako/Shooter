@@ -20,7 +20,7 @@ public:
 	SDL_Rect Location;
 	bool Destroyed;
 
-	void Draw(SDL_Surface* screen);
+	virtual void Draw(SDL_Surface* screen);
 	virtual void DoUpdate(GameState* state);
 	bool CheckCollision(GameObject* otherObject);
 	void Destroy(GameState* state, Resources* resources);
@@ -33,6 +33,7 @@ protected:
 	double Rad(int degrees);
 	int Random(int min, int max);
 	void SetCollision(luabridge::LuaRef ref);
+	SDL_Surface* InitialiseImage(Resources* resources, luabridge::LuaRef ref, std::string imageIdentifier, std::string frameSizeIdentifier, std::vector<SDL_Rect>* frames);
 private:
 	SDL_Surface* Image;
 	std::vector<SDL_Rect> Collision;

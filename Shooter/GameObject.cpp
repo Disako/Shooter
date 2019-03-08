@@ -147,6 +147,55 @@ void GameObject::Destroy(GameState* state, Resources* resources)
 	}
 }
 
+SDL_Surface* GameObject::InitialiseImage(Resources* resources, luabridge::LuaRef ref, std::string imageIdentifier, std::string frameSizeIdentifier, std::vector<SDL_Rect>* frames)
+{
+	auto image = resources->LoadImage(GetString(ref, imageIdentifier, "none"));
+
+	auto frameWidth = GetInt(ref, frameSizeIdentifier, 1, 0);
+	auto frameHeight = GetInt(ref, frameSizeIdentifier, 2, 0);
+
+	frames->clear();
+
+	if (frameWidth == 0 || frameHeight == 0)
+	{
+		SDL_Rect rect = image->clip_rect;
+
+		SDL_Rect frame;
+		frame.x = 0;
+		frame.y = 0;
+		frame.w = rect.w;
+		frame.h = rect.h;
+		frames->push_back(frame);
+	}
+	else
+	{
+
+		SDL_Rect rect = image->clip_rect;
+
+		int x = 0;
+		int y = 0;
+
+		while (y + frameHeight <= rect.h)
+		{
+			while (x + frameWidth <= rect.w)
+			{
+				SDL_Rect frame;
+				frame.x = x;
+				frame.y = y;
+				frame.w = frameWidth;
+				frame.h = frameHeight;
+				frames->push_back(frame);
+
+				x += frameWidth;
+			}
+			x = 0;
+			y += frameHeight;
+		}
+	}
+
+	return image;
+}
+
 void GameObject::Initialise(Resources* resources, luabridge::LuaRef ref)
 {
 	SetCollision(ref["collision"]);
@@ -169,48 +218,10 @@ void GameObject::Initialise(Resources* resources, luabridge::LuaRef ref)
 	auto frameWidth = GetInt(ref, "frameSize", 1, 0);
 	auto frameHeight = GetInt(ref, "frameSize", 2, 0);
 
-	Frames.clear();
+	Image = InitialiseImage(resources, ref, "image", "frameSize", &Frames);
 
-	if (frameWidth == 0 || frameHeight == 0)
-	{
-		SDL_Rect rect = GetCurrentImage()->clip_rect;
-		Location.w = rect.w;
-		Location.h = rect.h;
-
-		SDL_Rect frame;
-		frame.x = 0;
-		frame.y = 0;
-		frame.w = rect.w;
-		frame.h = rect.h;
-		Frames.push_back(frame);
-	}
-	else
-	{
-		Location.w = frameWidth;
-		Location.h = frameHeight;
-
-		SDL_Rect rect = GetCurrentImage()->clip_rect;
-
-		int x = 0;
-		int y = 0;
-
-		while (y + frameHeight <= rect.h)
-		{
-			while (x + frameWidth <= rect.w)
-			{
-				SDL_Rect frame;
-				frame.x = x;
-				frame.y = y;
-				frame.w = frameWidth;
-				frame.h = frameHeight;
-				Frames.push_back(frame);
-
-				x+= frameWidth;
-			}
-			x = 0;
-			y += frameHeight;
-		}
-	}
+	Location.w = Frames[0].w;
+	Location.h = Frames[0].h;
 
 	SetupExplodeParticles(ref["explodeParticles"]);
 }

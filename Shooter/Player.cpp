@@ -144,9 +144,16 @@ void Player::DoUpdate(GameState* state)
 				else
 				{
 					Destroy(state, ResourcesStore);
-					SetLevel(Level - 1, true, state);
+					if (Shielded)
+					{
+						Shielded = false;
+					}
+					else
+					{
+						SetLevel(Level - 1, true, state);
+						state->ScoreMultiplier = 1;
+					}
 					Invincibility = 60;
-					state->ScoreMultiplier = 1;
 				}
 			}
 		}
@@ -155,7 +162,18 @@ void Player::DoUpdate(GameState* state)
 		{
 			if (CheckCollision(upgrade))
 			{
-				SetLevel(Level + 1, false, state);
+				if (upgrade->UpgradeAction)
+				{
+					PlayerInfo info;
+					info.Level = Level;
+					info.MaxLevel = MaxLevel;
+					info.ScoreMultiplier = state->ScoreMultiplier;
+					info.Shielded = Shielded;
+					info = upgrade->UpgradeAction(info);
+					state->ScoreMultiplier = info.ScoreMultiplier;
+					Shielded = info.Shielded;
+					SetLevel(info.Level, false, state);
+				}
 				upgrade->Destroyed = true;
 			}
 		}
@@ -164,17 +182,39 @@ void Player::DoUpdate(GameState* state)
 
 void Player::SetLevel(int level, bool immediate, GameState* state)
 {
-	if (level <= MaxLevel)
+	if (level <= MaxLevel && level != Level)
 	{
 		Level = level;
 		SetCollision(CollisionRefs[level]);
 		if (immediate) Frame = (Level - 1) * 4;
 	}
-	else
-	{
-		state->ScoreMultiplier++;
-	}
 
+}
+
+void Player::Draw(SDL_Surface * screen)
+{
+	GameObject::Draw(screen);
+
+	if (Shielded)
+	{
+		auto frameRect = new SDL_Rect(ShieldFrames[ShieldFrame]);
+		auto positionRect = new SDL_Rect(Location);
+		positionRect->x += positionRect->w / 2 - ShieldFrames[ShieldFrame].w / 2;
+		positionRect->y += positionRect->h / 2 - ShieldFrames[ShieldFrame].h / 2;
+		SDL_BlitSurface(ShieldImage, frameRect, screen, positionRect);
+
+		delete frameRect;
+		delete positionRect;
+
+		ShieldLastChange++;
+		if (ShieldLastChange >= ShieldFrameChangeFrequency)
+		{
+			ShieldLastChange = 0;
+			ShieldFrame++;
+			if (ShieldFrame >= ShieldFrames.size())
+				ShieldFrame = 0;
+		}
+	}
 }
 
 void Player::Initialise(Resources * resources, lua_State* L, luabridge::LuaRef ref)
@@ -239,4 +279,7 @@ void Player::Initialise(Resources * resources, lua_State* L, luabridge::LuaRef r
 
 		SetLevel(1, true, nullptr);
 	}
+
+	ShieldImage = InitialiseImage(resources, ref, "shieldImage", "shieldFrameSize", &ShieldFrames);
+	ShieldFrameChangeFrequency = GetInt(ref, "shieldFrameChangeFreq", 1);
 }

@@ -26,6 +26,7 @@ public:
 	~Player() override;
 	void DoUpdate(GameState* state) override;
 	void SetLevel(int level, bool setFrame, GameState* state);
+	void Draw(SDL_Surface* screen) override;
 private:
 	Player(Resources* resources, lua_State* L, luabridge::LuaRef ref);
 	void Initialise(Resources* resources, lua_State* L, luabridge::LuaRef ref);
@@ -38,5 +39,11 @@ private:
 	int MaxLevel;
 	luabridge::LuaRef CollisionRefs = nullptr;
 	int LastChange;
+	int ShieldFrame;
+	std::vector<SDL_Rect> ShieldFrames;
+	bool Shielded = false;
+	int ShieldLastChange;
+	int ShieldFrameChangeFrequency;
+	SDL_Surface* ShieldImage;
 };
 

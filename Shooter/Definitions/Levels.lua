@@ -100,7 +100,7 @@ level1={
 	},
 	{
 		action = "upgrade",
-		upgrader = "upgrader",
+		upgrader = "shieldUpgrader",
 		location = { 110, 480 },
 		state = "left"
 	},

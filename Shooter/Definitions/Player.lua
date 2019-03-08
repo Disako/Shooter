@@ -1,5 +1,6 @@
 player = {
 	image = "images\\Ship.bmp",
+	shieldImage = "images\\Shield.bmp",
 	levelCollision = {
 		{
 			{ 17, 16, 6, 12 }
@@ -21,6 +22,8 @@ player = {
 		}
 	},
 	frameSize = { 40, 40 },
+	shieldFrameSize = { 44, 53 },
+	shieldFrameChangeFreq = 5,
 	weapons = {
 		{
 			identifier = "basicBullet",
@@ -170,5 +173,39 @@ upgrader = {
 		end
 		position.y = 480 - math.floor(math.sin(math.rad(position.count / 3)) * 150)	
 		return position
+	end,
+	upgradeAction = function(playerInfo)
+		if playerInfo.level < playerInfo.maxLevel then
+			playerInfo.level = playerInfo.level + 1
+		else
+			playerInfo.scoreMultiplier = playerInfo.scoreMultiplier + 1
+		end
+		return playerInfo
+	end
+}
+shieldUpgrader = {
+	image = "images\\ShieldUpgrader.bmp",
+	frameSize = { 20, 20 },
+	collision = { { 0, 5, 20, 15 } },
+	movement = function(position)
+		position.count = position.count + 1
+		if position.count % 10 == 0 then
+			position.frame = position.frame + 1
+		end
+		if position.state == "left" then
+			position.x = 310 - math.floor(math.cos(math.rad(position.count / 3)) * 200)
+		else
+			position.x = 310 + math.floor(math.cos(math.rad(position.count / 3)) * 200)
+		end
+		position.y = 480 - math.floor(math.sin(math.rad(position.count / 3)) * 150)	
+		return position
+	end,
+	upgradeAction = function(playerInfo)
+		if playerInfo.shielded then
+			playerInfo.scoreMultiplier = playerInfo.scoreMultiplier + 1
+		else
+			playerInfo.shielded = true
+		end
+		return playerInfo
 	end
 }

@@ -166,6 +166,7 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="Number.cpp" />
     <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="PlayerInfo.h" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="AutoMove.cpp" />
     <ClCompile Include="Level.cpp" />

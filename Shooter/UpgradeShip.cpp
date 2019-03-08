@@ -10,9 +10,24 @@ UpgradeShip::UpgradeShip(Resources* resources, lua_State* L, std::string type, s
 UpgradeShip::UpgradeShip(Resources* resources, luabridge::LuaRef ref, std::string initialState)
 	: AutoMove(resources, ref, initialState)
 {
+	Initialise(ref);
 }
 
 
 UpgradeShip::~UpgradeShip()
 {
+}
+
+
+void UpgradeShip::Initialise(luabridge::LuaRef ref)
+{
+	auto upgradeAction = GetFunction(ref, "upgradeAction");
+	if (upgradeAction.isNil())
+	{
+		UpgradeAction = nullptr;
+	}
+	else
+	{
+		UpgradeAction = upgradeAction;
+	}
 }
